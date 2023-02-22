@@ -1,3 +1,6 @@
 [container]
-disabled = true
+format = '[$symbol]($style) '
+style = 'bold cyan dimmed'
 
+[env_var]
+variable = 'CONTAINER_NAME'

@@ -2,8 +2,11 @@ FROM ubuntu:22.04
 
 # user setup
 ARG USER=queil
+ARG GIT_USER=queil
+ARG GIT_EMAIL=queil@users.noreply.github.com
+
 ARG HOME=/home/$USER
-RUN adduser $USER
+RUN adduser $USER && groupadd docker && usermod -aG docker $USER
 
 # software
 RUN apt-get update && apt-get install -y curl git nano unzip
@@ -32,7 +35,10 @@ RUN mkdir .nano && \
     git clone https://github.com/scopatz/nanorc.git .nano && \
     echo "include $HOME/.nano/*.nanorc" >> ~/.nanorc
 
+RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
+
 # bashrc setup
 RUN echo 'eval "$(starship init bash)"' >> .bashrc
+RUN echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc
 
 USER $USER
