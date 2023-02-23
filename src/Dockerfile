@@ -28,9 +28,11 @@ ARG VSCODE_GIT_HASH=441438abd1ac652551dbe4d408dfcec8a499b8bf
 RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o /tmp/vscode-server-linux-x64.tar.gz && \
     mkdir -p $HOME/.vscode-server/bin/$VSCODE_GIT_HASH && \
     mkdir -p $HOME/.vscode-server/data && \
+    mkdir -p $HOME/.vscode-server/extensions && \
     tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C $HOME/.vscode-server/bin/$VSCODE_GIT_HASH --strip 1 && \
     chown $USER $HOME/.vscode-server/bin && \
     chown $USER $HOME/.vscode-server/data && \
+    chown $USER $HOME/.vscode-server/extensions && \
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
 
