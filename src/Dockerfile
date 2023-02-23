@@ -20,8 +20,6 @@ RUN mkdir -m 0755 -p /etc/apt/keyrings && \
 
 RUN apt-get update && apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin
 
-
-COPY --from=docker:cli /usr/local/bin/docker /usr/local/bin/docker
 RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
     chmod +x ./install.sh && ./install.sh --yes && rm ./install.sh
 
