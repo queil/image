@@ -6,11 +6,17 @@ ARG GIT_USER=queil
 ARG GIT_EMAIL=queil@users.noreply.github.com
 
 ARG HOME=/home/$USER
-RUN adduser $USER && groupadd docker && usermod -aG docker $USER
+RUN adduser $USER && groupadd docker && usermod -aG docker $USER && chown $USER -R $HOME
 
 # software
 
-RUN apt-get update && apt-get install -y curl git nano gnupg lsb-release
+RUN apt-get update && apt-get install -y \
+    gnupg \
+    lsb-release \
+    curl \
+    git \
+    nano \
+    bat
 
 RUN mkdir -m 0755 -p /etc/apt/keyrings && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
@@ -38,20 +44,23 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
 
-# config
+# Config in $HOME
+
 WORKDIR $HOME
-
-COPY starship.toml .config/
-COPY .nanorc ./
-
-RUN mkdir .nano && \
-    git clone https://github.com/scopatz/nanorc.git .nano && \
-    echo "include $HOME/.nano/*.nanorc" >> ~/.nanorc
+USER $USER
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
-# bashrc setup
-RUN echo 'eval "$(starship init bash)"' >> .bashrc
-RUN echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc
+COPY --chown=$USER starship.toml .config/
+COPY --chown=$USER .nanorc ./
 
-USER $USER
+RUN mkdir .nano && \
+    git clone https://github.com/scopatz/nanorc.git .nano && \
+    echo "include ~/.nano/*.nanorc" >> $HOME/.nanorc
+
+RUN mkdir -p $HOME/.local/bin && ln -s /usr/bin/batcat $HOME/.local/bin/bat
+
+# bashrc setup
+RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
+    echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc && \
+    echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc
