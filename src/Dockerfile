@@ -38,11 +38,15 @@ USER $USER
 
 ARG VSCODE_GIT_HASH=441438abd1ac652551dbe4d408dfcec8a499b8bf
 
+RUN mkdir -p $HOME/.local/bin
+
 RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o /tmp/vscode-server-linux-x64.tar.gz && \
     mkdir -p $HOME/.vscode-server/bin/$VSCODE_GIT_HASH && \
     tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C $HOME/.vscode-server/bin/$VSCODE_GIT_HASH --strip 1 && \
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
+
+RUN curl -sSL https://github.com/queil/rooz/releases/download/v0.1.0/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
@@ -53,9 +57,10 @@ RUN mkdir .nano && \
     git clone https://github.com/scopatz/nanorc.git .nano && \
     echo "include ~/.nano/*.nanorc" >> $HOME/.nanorc
 
-RUN mkdir -p $HOME/.local/bin && ln -s /usr/bin/batcat $HOME/.local/bin/bat
+RUN ln -s /usr/bin/batcat $HOME/.local/bin/bat
 
 # bashrc setup
 RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
     echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc && \
-    echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc
+    echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc && \
+    echo 'export ROOZ_IMAGE=ghcr.io/queil/image:0.10.0' >> .bashrc
