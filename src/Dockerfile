@@ -12,6 +12,7 @@ RUN adduser $USER && groupadd docker && usermod -aG docker $USER && chown $USER 
 RUN apt-get update && apt-get install -y \
     gnupg \
     lsb-release \
+    bash-completion \
     curl \
     git \
     nano \
