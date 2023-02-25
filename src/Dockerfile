@@ -63,5 +63,5 @@ RUN ln -s /usr/bin/batcat $HOME/.local/bin/bat
 RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
     echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc && \
     echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc && \
-    echo 'export ROOZ_IMAGE=ghcr.io/queil/image:0.11.0' >> .bashrc
+    echo 'export ROOZ_IMAGE=ghcr.io/queil/image:0.11.0' >> .bashrc && \
     echo 'export ROOZ_SHELL=bash' >> .bashrc
