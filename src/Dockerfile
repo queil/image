@@ -46,7 +46,7 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
 
-RUN curl -sSL https://github.com/queil/rooz/releases/download/v0.1.0/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
+RUN curl -sSL https://github.com/queil/rooz/releases/download/v0.2.0/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
@@ -63,4 +63,5 @@ RUN ln -s /usr/bin/batcat $HOME/.local/bin/bat
 RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
     echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc && \
     echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc && \
-    echo 'export ROOZ_IMAGE=ghcr.io/queil/image:0.10.0' >> .bashrc
+    echo 'export ROOZ_IMAGE=ghcr.io/queil/image:0.11.0' >> .bashrc
+    echo 'export ROOZ_SHELL=bash' >> .bashrc
