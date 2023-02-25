@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 as base
 
 ARG USER=queil
 ARG GIT_USER=queil
@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     bash-completion \
     curl \
+    wget \
     git \
     nano \
     bat \
@@ -65,3 +66,14 @@ RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
     echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc && \
     echo 'export ROOZ_IMAGE=ghcr.io/queil/image:0.11.0' >> .bashrc && \
     echo 'export ROOZ_SHELL=bash' >> .bashrc
+
+FROM base as dotnet
+
+USER root
+
+RUN wget https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+     dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb
+
+RUN apt-get update && apt-get install -y dotnet-sdk-7.0
+
+USER queil
