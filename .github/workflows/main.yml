@@ -27,7 +27,7 @@ jobs:
           push: true
           target: base
           build-args:
-          - IMAGE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
+            IMAGE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}
 
       - name: build'n'push - base
@@ -37,5 +37,5 @@ jobs:
           push: true
           target: dotnet
           build-args:
-          - IMAGE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
+            IMAGE_VERSION: ${{ steps.get_version.outputs.version-without-v }}
           tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-dotnet
