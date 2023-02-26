@@ -37,3 +37,12 @@ jobs:
           target: dotnet
           build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
           tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-dotnet
+
+      - name: build'n'push - rust
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: src
+          push: true
+          target: rust
+          build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
+          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-rust

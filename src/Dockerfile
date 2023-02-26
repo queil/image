@@ -47,7 +47,9 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
 
-RUN curl -sSL https://github.com/queil/rooz/releases/download/v0.2.0/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
+
+ARG ROOZ_VERSION=0.3.0
+RUN curl -sSL https://github.com/queil/rooz/releases/download/v${ROOZ_VERSION}/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
@@ -69,6 +71,8 @@ ARG IMAGE_VERSION=0.11.0
 ENV ROOZ_IMAGE=ghcr.io/queil/image:$IMAGE_VERSION
 ENV ROOZ_SHELL=bash
 
+# VARIANT - DOTNET
+
 FROM base as dotnet
 
 USER root
@@ -77,5 +81,18 @@ RUN wget https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-p
      dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb
 
 RUN apt-get update && apt-get install -y dotnet-sdk-7.0
+
+USER queil
+
+# VARIANT - RUST
+
+FROM base as rust
+
+USER root
+
+RUN apt-get update && apt-get install -y build-essential
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 USER queil
