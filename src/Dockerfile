@@ -48,7 +48,7 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     rm /tmp/vscode-server-linux-x64.tar.gz
 
 
-ARG ROOZ_VERSION=0.3.0
+ARG ROOZ_VERSION=0.4.0
 RUN curl -sSL https://github.com/queil/rooz/releases/download/v${ROOZ_VERSION}/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
@@ -67,7 +67,7 @@ RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
     echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc && \
     echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc
 
-ARG IMAGE_VERSION=0.11.0
+ARG IMAGE_VERSION
 ENV ROOZ_IMAGE=ghcr.io/queil/image:$IMAGE_VERSION
 ENV ROOZ_SHELL=bash
 
@@ -82,6 +82,9 @@ RUN wget https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-p
 
 RUN apt-get update && apt-get install -y dotnet-sdk-7.0
 
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
+ENV DOTNET_NOLOGO=true
+
 USER queil
 
 # VARIANT - RUST
@@ -89,10 +92,9 @@ USER queil
 FROM base as rust
 
 USER root
-
 RUN apt-get update && apt-get install -y build-essential
+USER queil
+
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="/root/.cargo/bin:${PATH}"
-
-USER queil
