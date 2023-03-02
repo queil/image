@@ -48,7 +48,7 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     rm /tmp/vscode-server-linux-x64.tar.gz
 
 
-ARG ROOZ_VERSION=0.4.0
+ARG ROOZ_VERSION=0.7.0
 RUN curl -sSL https://github.com/queil/rooz/releases/download/v${ROOZ_VERSION}/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
