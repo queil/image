@@ -70,6 +70,7 @@ RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
 ARG IMAGE_VERSION
 ENV ROOZ_IMAGE=ghcr.io/queil/image:$IMAGE_VERSION
 ENV ROOZ_SHELL=bash
+ENV ROOZ_USER=$USER
 
 # VARIANT - DOTNET
 
