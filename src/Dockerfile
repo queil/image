@@ -85,6 +85,7 @@ RUN apt-get update && apt-get install -y dotnet-sdk-7.0
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
+ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
 USER queil
 
@@ -98,4 +99,4 @@ USER queil
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
-ENV PATH="/root/.cargo/bin:${PATH}"
+ENV PATH="${PATH}:${HOME}/.cargo/bin"
