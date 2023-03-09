@@ -56,17 +56,14 @@ RUN git config --global user.name "$GIT_USER" && git config --global user.email 
 
 COPY --chown=$USER starship.toml .config/
 COPY --chown=$USER .nanorc ./
+COPY --chown=$USER .custom.sh ./
 
 RUN mkdir .nano && \
     git clone https://github.com/scopatz/nanorc.git .nano && \
     echo "include ~/.nano/*.nanorc" >> $HOME/.nanorc
 
 RUN ln -s /usr/bin/batcat $HOME/.local/bin/bat
-
-# bashrc setup
-RUN echo 'eval "$(starship init bash)"' >> .bashrc && \
-    echo 'export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}")' >> .bashrc && \
-    echo 'PATH=$HOME/.local/bin:$PATH' >> .bashrc
+RUN echo '. $HOME/.custom.sh' >> .bashrc
 
 ARG IMAGE_VERSION
 ENV ROOZ_IMAGE=ghcr.io/queil/image:$IMAGE_VERSION
