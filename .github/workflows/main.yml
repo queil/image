@@ -27,7 +27,7 @@ jobs:
           push: true
           target: base
           build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}
+          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }},ghcr.io/${{ github.repository }}:latest
 
       - name: build'n'push - dotnet
         uses: docker/build-push-action@v4.0.0
@@ -36,7 +36,7 @@ jobs:
           push: true
           target: dotnet
           build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-dotnet
+          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-dotnet,ghcr.io/${{ github.repository }}:dotnet
 
       - name: build'n'push - rust
         uses: docker/build-push-action@v4.0.0
@@ -45,4 +45,4 @@ jobs:
           push: true
           target: rust
           build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-rust
+          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-rust,ghcr.io/${{ github.repository }}:rust

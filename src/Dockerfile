@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     nano \
     bat \
     dnsutils \
-    iproute2
+    iproute2 \
+    htop
 
 RUN mkdir -m 0755 -p /etc/apt/keyrings && \
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
