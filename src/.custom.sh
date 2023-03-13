@@ -7,7 +7,7 @@ alias cat=bat
 
 eval "$(starship init bash)"
 
-export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}" > /dev/null 2>&1 || hostname)
+export CONTAINER_NAME=$(docker ps -f ID=$(hostname) --format "{{.Names}}" || hostname)
 export PATH=$HOME/.local/bin:$PATH
 
 # SET WINDOW TITLE
