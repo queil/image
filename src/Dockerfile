@@ -38,7 +38,7 @@ RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
 WORKDIR $HOME
 USER $USER
 
-ARG VSCODE_GIT_HASH=441438abd1ac652551dbe4d408dfcec8a499b8bf
+ARG VSCODE_GIT_HASH=5e805b79fcb6ba4c2d23712967df89a089da575b
 
 RUN mkdir -p $HOME/.local/bin
 
@@ -96,5 +96,6 @@ RUN apt-get update && apt-get install -y build-essential
 USER queil
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+RUN rustup default stable
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"
