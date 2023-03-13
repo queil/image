@@ -38,7 +38,7 @@ RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
 WORKDIR $HOME
 USER $USER
 
-ARG VSCODE_GIT_HASH=441438abd1ac652551dbe4d408dfcec8a499b8bf
+ARG VSCODE_GIT_HASH=5e805b79fcb6ba4c2d23712967df89a089da575b
 
 RUN mkdir -p $HOME/.local/bin
 
@@ -49,7 +49,7 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     rm /tmp/vscode-server-linux-x64.tar.gz
 
 
-ARG ROOZ_VERSION=0.8.0
+ARG ROOZ_VERSION=0.11.0
 RUN curl -sSL https://github.com/queil/rooz/releases/download/v${ROOZ_VERSION}/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
