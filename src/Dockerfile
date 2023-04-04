@@ -5,7 +5,7 @@ ARG GIT_USER=queil
 ARG GIT_EMAIL=queil@users.noreply.github.com
 
 ARG HOME=/home/$USER
-RUN adduser $USER && groupadd docker && usermod -aG docker $USER && chown $USER -R $HOME
+RUN adduser $USER && chown $USER -R $HOME
 
 # Software
 
@@ -21,14 +21,6 @@ RUN apt-get update && apt-get install -y \
     dnsutils \
     iproute2 \
     htop
-
-RUN mkdir -m 0755 -p /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-RUN apt-get update && apt-get install -y docker-ce-cli docker-buildx-plugin docker-compose-plugin
 
 RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
     chmod +x ./install.sh && ./install.sh --yes && rm ./install.sh
@@ -48,10 +40,6 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
 
-
-ARG ROOZ_VERSION=0.14.0
-RUN curl -sSL https://github.com/queil/rooz/releases/download/v${ROOZ_VERSION}/rooz -o $HOME/.local/bin/rooz && chmod +x $HOME/.local/bin/rooz
-
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
 COPY --chown=$USER starship.toml .config/
@@ -64,11 +52,6 @@ RUN mkdir .nano && \
 
 RUN ln -s /usr/bin/batcat $HOME/.local/bin/bat
 RUN echo '. $HOME/.custom.sh' >> .bashrc
-
-ARG IMAGE_VERSION
-ENV ROOZ_IMAGE=ghcr.io/queil/image:$IMAGE_VERSION
-ENV ROOZ_SHELL=bash
-ENV ROOZ_USER=$USER
 
 # VARIANT - DOTNET
 
