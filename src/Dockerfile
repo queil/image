@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y \
     bat \
     dnsutils \
     iproute2 \
-    htop
+    htop \
+    podman
 
 RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
     chmod +x ./install.sh && ./install.sh --yes && rm ./install.sh
