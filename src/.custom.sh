@@ -3,11 +3,10 @@
 # ALIASES
 
 alias gr='cd $(git rev-parse --show-toplevel)'
-alias cat=bat
 
 eval "$(starship init bash)"
 
-export CONTAINER_NAME=$(hostname)
+export CONTAINER_NAME=$(cat /etc/hostname)
 export PATH=$HOME/.local/bin:$PATH
 
 # SET WINDOW TITLE

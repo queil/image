@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base
+FROM fedora:rawhide as base
 
 ARG USER=queil
 ARG GIT_USER=queil
@@ -9,19 +9,18 @@ RUN adduser $USER && chown $USER -R $HOME
 
 # Software
 
-RUN apt-get update && apt-get install -y \
-    gnupg \
-    lsb-release \
+RUN dnf install -y \
     bash-completion \
-    curl \
-    wget \
     git \
     nano \
     bat \
     dnsutils \
-    iproute2 \
     htop \
-    podman
+    podman shadow-utils fuse-overlayfs && \
+    dnf clean all && \
+    rm -rf /var/cache/yum
+
+RUN chmod 4755 /usr/bin/newuidmap && chmod 4755 /usr/bin/newgidmap
 
 RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
     chmod +x ./install.sh && ./install.sh --yes && rm ./install.sh
@@ -60,10 +59,7 @@ FROM base as dotnet
 
 USER root
 
-RUN wget https://packages.microsoft.com/config/ubuntu/22.10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-     dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb
-
-RUN apt-get update && apt-get install -y dotnet-sdk-7.0
+RUN dnf install -y dotnet-sdk-7.0 && dnf clean all && rm -rf /var/cache/yum
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
@@ -74,10 +70,6 @@ USER queil
 # VARIANT - RUST
 
 FROM base as rust
-
-USER root
-RUN apt-get update && apt-get install -y build-essential
-USER queil
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
