@@ -107,6 +107,7 @@ USER queil
 
 FROM base as rust
 
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+RUN ln -s /usr/bin/ld.bfd /usr/bin/ld && \
+    curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"
