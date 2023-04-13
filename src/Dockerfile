@@ -18,7 +18,6 @@ RUN dnf update -y && \
     htop \
     podman slirp4netns fuse-overlayfs --exclude container-selinux && \
     dnf reinstall -y shadow-utils && \
-    ln -s /usr/bin/ld.bfd /usr/bin/ld && \
     dnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
@@ -107,6 +106,14 @@ USER queil
 # VARIANT - RUST
 
 FROM base as rust
+
+USER root
+
+RUN dnf -y update && dnf install -y gcc && \
+    dnf clean all && \
+    rm -rf /var/cache /var/log/dnf* /var/log/yum.*
+
+USER queil
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
