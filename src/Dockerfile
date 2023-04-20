@@ -66,7 +66,7 @@ RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
 WORKDIR $HOME
 USER $USER
 
-ARG VSCODE_GIT_HASH=b7886d7461186a5eac768481578c1d7ca80e2d21
+ARG VSCODE_GIT_HASH=704ed70d4fd1c6bd6342c436f1ede30d1cff4710
 
 RUN mkdir -p $HOME/.local/bin
 
