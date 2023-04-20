@@ -52,7 +52,6 @@ jobs:
         with:
           context: src
           push: true
-          target: rust
+          target: python
           build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
           tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-python,ghcr.io/${{ github.repository }}:python
-
