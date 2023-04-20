@@ -10,15 +10,9 @@ ARG HOME=/home/$USER
 RUN dnf update -y && \
     rpm --setcaps shadow-utils 2>/dev/null && \
     dnf install -y \
-    bash-completion \
-    git \
-    nano \
-    bat \
-    dnsutils \
-    htop \
-    which \
-    podman slirp4netns fuse-overlayfs --exclude container-selinux && \
-    podman-compose && \
+    bash-completion git nano bat dnsutils htop which \
+    podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
+
     dnf reinstall -y shadow-utils && \
     dnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
