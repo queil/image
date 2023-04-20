@@ -18,6 +18,7 @@ RUN dnf update -y && \
     htop \
     which \
     podman slirp4netns fuse-overlayfs --exclude container-selinux && \
+    podman-compose && \
     dnf reinstall -y shadow-utils && \
     dnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
