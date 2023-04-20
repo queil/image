@@ -124,5 +124,9 @@ ENV PATH="${PATH}:${HOME}/.cargo/bin"
 
 FROM base as python
 
+USER root
+
 RUN ln -s /usr/bin/python3 /usr/bin/python && \
     dnf install -y poetry && dnf clean all && rm -rf /var/cache/yum
+
+USER queil
