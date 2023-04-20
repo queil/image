@@ -16,6 +16,7 @@ RUN dnf update -y && \
     bat \
     dnsutils \
     htop \
+    which \
     podman slirp4netns fuse-overlayfs --exclude container-selinux && \
     dnf reinstall -y shadow-utils && \
     dnf clean all && \
@@ -118,3 +119,10 @@ USER queil
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"
+
+# VARIANT - PYTHON
+
+FROM base as python
+
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
+    dnf install -y poetry && dnf clean all && rm -rf /var/cache/yum

@@ -46,3 +46,13 @@ jobs:
           target: rust
           build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
           tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-rust,ghcr.io/${{ github.repository }}:rust
+
+      - name: build'n'push - python
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: src
+          push: true
+          target: rust
+          build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
+          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-python,ghcr.io/${{ github.repository }}:python
+
