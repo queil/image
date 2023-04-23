@@ -41,7 +41,6 @@ RUN mkdir -p /home/$USER/.local/share/containers && \
 # Note VOLUME options must always happen after the chown call above
 # RUN commands can not modify existing volumes
 VOLUME /var/lib/containers
-VOLUME /home/$USER/.local/share/containers
 
 RUN mkdir -p /var/lib/shared/overlay-images \
              /var/lib/shared/overlay-layers \
