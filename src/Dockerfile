@@ -72,6 +72,10 @@ RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stabl
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
     rm /tmp/vscode-server-linux-x64.tar.gz
 
+USER root
+RUN ln -s $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/bin/code-server /usr/bin/code-server
+USER $USER
+
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
 COPY --chown=$USER starship.toml .config/
@@ -125,3 +129,5 @@ RUN ln -s /usr/bin/python3 /usr/bin/python && \
     dnf install -y poetry && dnf clean all && rm -rf /var/cache/yum
 
 USER queil
+
+RUN code-server --install-extension ms-python.python
