@@ -76,6 +76,11 @@ USER root
 RUN ln -s $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/bin/code-server /usr/bin/code-server
 USER $USER
 
+# global vscode extensions
+
+RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
+    code-server --install-extension luxcium.pop-n-lock-theme-vscode
+
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
 COPY --chown=$USER starship.toml .config/
@@ -103,6 +108,8 @@ ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
 USER queil
 
+RUN code-server --install-extension Ionide.Ionide-fsharp
+
 # VARIANT - RUST
 
 FROM base as rust
@@ -118,6 +125,8 @@ USER queil
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"
+
+RUN code-server --install-extension rust-lang.rust-analyzer
 
 # VARIANT - PYTHON
 
