@@ -64,7 +64,7 @@ USER $USER
 
 RUN systemctl --user enable podman.socket
 
-ARG VSCODE_GIT_HASH=704ed70d4fd1c6bd6342c436f1ede30d1cff4710
+ARG VSCODE_GIT_HASH=b3e4e68a0bc097f0ae7907b217c1119af9e03435
 
 RUN mkdir -p $HOME/.local/bin
 
