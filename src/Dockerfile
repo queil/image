@@ -102,7 +102,7 @@ FROM base as dotnet
 
 USER root
 
-RUN dnf install -y dotnet-sdk-7.0 && dnf clean all && rm -rf /var/cache/yum
+RUN dnf install -y dotnet-sdk-7.0 dotnet-sdk-6.0 && dnf clean all && rm -rf /var/cache/yum
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
