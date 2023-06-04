@@ -3,6 +3,8 @@
 # ALIASES
 
 alias gr='cd $(git rev-parse --show-toplevel)'
+alias co='git checkout'
+alias cb='git checkout -b'
 
 eval "$(starship init bash)"
 
