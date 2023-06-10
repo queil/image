@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:rawhide as base
+FROM registry.fedoraproject.org/fedora-minimal:39 as base
 
 ARG USER=queil
 ARG GIT_USER=queil
