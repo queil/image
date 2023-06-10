@@ -10,7 +10,7 @@ ARG HOME=/home/$USER
 RUN microdnf update -y && \
     microdnf install -y \
     bash-completion git micro jq dnsutils htop which procps-ng \
-    shadow-utils podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
+    podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     microdnf clean all && \
     rpm --setcaps shadow-utils 2>/dev/null && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
@@ -84,14 +84,8 @@ RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
 COPY --chown=$USER starship.toml .config/
-COPY --chown=$USER .nanorc ./
 COPY --chown=$USER .custom.sh ./
 
-RUN mkdir .nano && \
-    git clone https://github.com/scopatz/nanorc.git .nano && \
-    echo "include ~/.nano/*.nanorc" >> $HOME/.nanorc
-
-RUN ln -s /usr/bin/batcat $HOME/.local/bin/bat
 RUN echo '. $HOME/.custom.sh' >> .bashrc
 
 # VARIANT - DOTNET
@@ -100,7 +94,7 @@ FROM base as dotnet
 
 USER root
 
-RUN dnf install -y dotnet-sdk-7.0 dotnet-sdk-6.0 && dnf clean all && rm -rf /var/cache/yum
+RUN microdnf update -y && microdnf install -y dotnet-sdk-7.0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
@@ -116,8 +110,8 @@ FROM base as rust
 
 USER root
 
-RUN dnf -y update && dnf install -y gcc && \
-    dnf clean all && \
+RUN microdnf -y update && microdnf install -y gcc && \
+    microdnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 USER queil
@@ -126,7 +120,8 @@ RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"
 
-RUN code-server --install-extension rust-lang.rust-analyzer
+RUN code-server --install-extension rust-lang.rust-analyzer && \
+    code-server --install-extension vadimcn.vscode-lldb
 
 # VARIANT - PYTHON
 
@@ -135,7 +130,7 @@ FROM base as python
 USER root
 
 RUN ln -s /usr/bin/python3 /usr/bin/python && \
-    dnf install -y poetry && dnf clean all && rm -rf /var/cache/yum
+    microdnf update -y && microdnf install -y poetry && microdnf clean all && rm -rf /var/cache/yum
 
 USER queil
 
