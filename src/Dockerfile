@@ -9,7 +9,7 @@ ARG HOME=/home/$USER
 
 RUN microdnf update -y && \
     rpm --setcaps shadow-utils 2>/dev/null && \
-    dnf install -y \
+    microdnf install -y \
     bash-completion git micro jq dnsutils htop which procps-ng \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
 
