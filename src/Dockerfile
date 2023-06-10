@@ -8,13 +8,11 @@ ARG HOME=/home/$USER
 # Software
 
 RUN microdnf update -y && \
-    rpm --setcaps shadow-utils 2>/dev/null && \
     microdnf install -y \
     bash-completion git micro jq dnsutils htop which procps-ng \
-    podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
-
-    microdnf reinstall -y shadow-utils && \
+    shadow-utils podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     microdnf clean all && \
+    rpm --setcaps shadow-utils 2>/dev/null && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 RUN adduser $USER && chown $USER -R $HOME && \
