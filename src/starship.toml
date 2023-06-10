@@ -1,6 +1,7 @@
-[container]
-format = '[$symbol]($style) '
-style = 'bold cyan dimmed'
-
 [env_var]
-variable = 'CONTAINER_NAME'
+variable = "ROOZ_META_WORKSPACE"
+format = '[⬢ $env_value]($style) '
+style = '#999999'
+
+[container]
+disabled = true
