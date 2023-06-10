@@ -129,8 +129,7 @@ FROM base as python
 
 USER root
 
-RUN ln -s /usr/bin/python3 /usr/bin/python && \
-    microdnf update -y && microdnf install -y poetry && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf update -y && microdnf install -y poetry && microdnf clean all && rm -rf /var/cache/yum
 
 USER queil
 
