@@ -10,7 +10,7 @@ ARG HOME=/home/$USER
 RUN dnf update -y && \
     rpm --setcaps shadow-utils 2>/dev/null && \
     dnf install -y \
-    bash-completion git nano micro bat dnsutils htop which procps-ng \
+    bash-completion git nano micro jq dnsutils htop which procps-ng \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
 
     dnf reinstall -y shadow-utils && \
