@@ -5,6 +5,8 @@
 alias gr='cd $(git rev-parse --show-toplevel)'
 alias co='git checkout'
 alias cb='git checkout -b'
+alias nano=micro
+alias nano2=nano
 
 eval "$(starship init bash)"
 

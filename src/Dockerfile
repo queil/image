@@ -64,11 +64,11 @@ USER $USER
 
 RUN systemctl --user enable podman.socket
 
-ARG VSCODE_GIT_HASH=b3e4e68a0bc097f0ae7907b217c1119af9e03435
-
 RUN mkdir -p $HOME/.local/bin
 
 RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o /tmp/vscode-server-linux-x64.tar.gz && \
+    tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C /tmp/vscode && \
+    export VSCODE_GIT_HASH=$(cat /tmp/vscode/product.json | jq -r .commit) && \
     mkdir -p $HOME/.vscode-server/bin/$VSCODE_GIT_HASH && \
     tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C $HOME/.vscode-server/bin/$VSCODE_GIT_HASH --strip 1 && \
     touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
