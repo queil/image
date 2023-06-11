@@ -7,7 +7,6 @@ alias co='git checkout'
 alias cb='git checkout -b'
 alias pu='git push -u origin "$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"'
 alias nano=micro
-alias nano2=nano
 
 eval "$(starship init bash)"
 
