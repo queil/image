@@ -8,8 +8,8 @@ ARG HOME=/home/$USER
 # Software
 
 RUN microdnf update -y && \
-    microdnf install -y \
-    bash-completion git micro jq dnsutils htop which procps-ng \
+    microdnf install -y --nodocs --setopt install_weak_deps=0 \
+    systemd tar bash-completion git micro jq dnsutils htop which procps-ng \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     microdnf clean all && \
     rpm --setcaps shadow-utils 2>/dev/null && \
@@ -83,7 +83,7 @@ RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
 
 RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
 
-COPY --chown=$USER starship.toml .config/
+COPY --chown=$USER .config/ .config/
 COPY --chown=$USER .custom.sh ./
 
 RUN echo '. $HOME/.custom.sh' >> .bashrc
@@ -94,7 +94,7 @@ FROM base as dotnet
 
 USER root
 
-RUN microdnf update -y && microdnf install -y dotnet-sdk-7.0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-7.0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
@@ -110,7 +110,7 @@ FROM base as rust
 
 USER root
 
-RUN microdnf -y update && microdnf install -y gcc && \
+RUN microdnf -y update && microdnf install -y --nodocs --setopt install_weak_deps=0 gcc && \
     microdnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
@@ -129,7 +129,7 @@ FROM base as python
 
 USER root
 
-RUN microdnf update -y && microdnf install -y poetry && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 poetry && microdnf clean all && rm -rf /var/cache/yum
 
 USER queil
 
