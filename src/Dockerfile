@@ -90,19 +90,25 @@ RUN echo '. $HOME/.custom.sh' >> .bashrc
 
 # VARIANT - DOTNET
 
-FROM base as dotnet
-
-USER root
-
-RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-7.0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
+FROM base as dotnet-base
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
 ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
+RUN code-server --install-extension Ionide.Ionide-fsharp
+
+FROM dotnet-base as dotnet-6
+
+USER root
+RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
 USER queil
 
-RUN code-server --install-extension Ionide.Ionide-fsharp
+FROM base as dotnet-7
+
+USER root
+RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-7.0 && microdnf clean all && rm -rf /var/cache/yum
+USER queil
 
 # VARIANT - RUST
 

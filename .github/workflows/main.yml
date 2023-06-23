@@ -18,40 +18,51 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - id: get_version
-        uses: battila7/get-version-action@v2
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          echo "VERSION=${TAG#v}" >> $GITHUB_ENV
 
-      - name: build'n'push - base
+      - name: base
         uses: docker/build-push-action@v4.0.0
         with:
           context: src
           push: true
           target: base
-          build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }},ghcr.io/${{ github.repository }}:latest
+          build-args: IMAGE_VERSION=${{ env.VERSION }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }},ghcr.io/${{ github.repository }}:latest
 
-      - name: build'n'push - dotnet
+      - name: dotnet-6
         uses: docker/build-push-action@v4.0.0
         with:
           context: src
           push: true
-          target: dotnet
-          build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-dotnet,ghcr.io/${{ github.repository }}:dotnet
+          target: dotnet-6
+          build-args: IMAGE_VERSION=${{ env.VERSION }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}-dotnet-6,ghcr.io/${{ github.repository }}:dotnet-6
 
-      - name: build'n'push - rust
+      - name: dotnet-7
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: src
+          push: true
+          target: dotnet-7
+          build-args: IMAGE_VERSION=${{ env.VERSION }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}-dotnet-7,ghcr.io/${{ github.repository }}:dotnet-7
+
+      - name: rust
         uses: docker/build-push-action@v4.0.0
         with:
           context: src
           push: true
           target: rust
-          build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-rust,ghcr.io/${{ github.repository }}:rust
+          build-args: IMAGE_VERSION=${{ env.VERSION }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}-rust,ghcr.io/${{ github.repository }}:rust
 
-      - name: build'n'push - python
+      - name: python
         uses: docker/build-push-action@v4.0.0
         with:
           context: src
           push: true
           target: python
-          build-args: IMAGE_VERSION=${{ steps.get_version.outputs.version-without-v }}
-          tags: ghcr.io/${{ github.repository }}:${{ steps.get_version.outputs.version-without-v }}-python,ghcr.io/${{ github.repository }}:python
+          build-args: IMAGE_VERSION=${{ env.VERSION }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}-python,ghcr.io/${{ github.repository }}:python
