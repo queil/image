@@ -1,8 +1,6 @@
 FROM registry.fedoraproject.org/fedora-minimal:39 as base
 
 ARG USER=queil
-ARG GIT_USER=queil
-ARG GIT_EMAIL=queil@users.noreply.github.com
 ARG HOME=/home/$USER
 
 # Software
@@ -81,10 +79,7 @@ USER $USER
 RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
-RUN git config --global user.name "$GIT_USER" && git config --global user.email "$GIT_EMAIL"
-
-COPY --chown=$USER .config/ .config/
-COPY --chown=$USER .custom.sh ./
+COPY --chown=$USER ./home/queil/ ~/
 
 RUN echo '. $HOME/.custom.sh' >> .bashrc
 
