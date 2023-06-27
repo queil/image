@@ -134,9 +134,16 @@ RUN code-server --install-extension rust-lang.rust-analyzer && \
 FROM base as python
 
 USER root
-
 RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 poetry && microdnf clean all && rm -rf /var/cache/yum
-
 USER queil
 
 RUN code-server --install-extension ms-python.python
+
+# VARIANT - DEVOPS
+
+FROM base as devops
+
+ARG SOPS_VER=3.7.3
+USER root
+RUN curl -sSL https://github.com/mozilla/sops/releases/download/v${SOPS_VER}/sops-v${SOPS_VER}.linux.amd64 -o /usr/bin/sops && chmod +x /usr/bin/sops
+USER queil
