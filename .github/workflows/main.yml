@@ -66,3 +66,12 @@ jobs:
           target: python
           build-args: IMAGE_VERSION=${{ env.VERSION }}
           tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}-python,ghcr.io/${{ github.repository }}:python
+
+      - name: devops
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: src
+          push: true
+          target: devops
+          build-args: IMAGE_VERSION=${{ env.VERSION }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.VERSION }}-devops,ghcr.io/${{ github.repository }}:devops
