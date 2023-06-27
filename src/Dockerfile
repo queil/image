@@ -79,7 +79,7 @@ USER $USER
 RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
-COPY --chown=$USER ./home/queil/ ~/
+COPY --chown=$USER ./home/queil/ $HOME/
 
 RUN echo '. $HOME/.custom.sh' >> .bashrc
 
