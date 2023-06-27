@@ -141,6 +141,9 @@ FROM base as devops
 ARG SOPS_VER=3.7.3
 ARG AWS_VAULT_VER=7.2.0
 
+ENV AWS_VAULT_BACKEND=file
+ENV AWS_EC2_METADATA_DISABLED=true
+
 USER root
 
 RUN curl -sSL https://github.com/mozilla/sops/releases/download/v${SOPS_VER}/sops-v${SOPS_VER}.linux.amd64 -o /usr/bin/sops && \
