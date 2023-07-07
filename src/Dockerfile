@@ -7,11 +7,9 @@ ARG HOME=/home/$USER
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    systemd tar bash-completion git micro jq dnsutils htop which procps-ng \
+    systemd tar unzip bash-completion git micro jq dnsutils htop which procps-ng \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
-    microdnf clean all && \
-    rpm --setcaps shadow-utils 2>/dev/null && \
-    rm -rf /var/cache /var/log/dnf* /var/log/yum.*
+    rpm --setcaps shadow-utils 2>/dev/null
 
 RUN adduser $USER && chown $USER -R $HOME && \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subuid; \
@@ -85,7 +83,7 @@ RUN echo '. $HOME/.custom.sh' >> .bashrc
 
 # VARIANT - DOTNET
 
-FROM base as dotnet-base
+FROM ghcr.io/queil/image:latest as dotnet-base
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
@@ -96,22 +94,22 @@ RUN code-server --install-extension Ionide.Ionide-fsharp
 FROM dotnet-base as dotnet-6
 
 USER root
-RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
 USER queil
 
-FROM base as dotnet-7
+FROM ghcr.io/queil/image:latest as dotnet-7
 
 USER root
-RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-7.0 && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-7.0 && microdnf clean all && rm -rf /var/cache/yum
 USER queil
 
 # VARIANT - RUST
 
-FROM base as rust
+FROM ghcr.io/queil/image:latest as rust
 
 USER root
 
-RUN microdnf -y update && microdnf install -y --nodocs --setopt install_weak_deps=0 gcc && \
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 gcc && \
     microdnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
@@ -126,17 +124,17 @@ RUN code-server --install-extension rust-lang.rust-analyzer && \
 
 # VARIANT - PYTHON
 
-FROM base as python
+FROM ghcr.io/queil/image:latest as python
 
 USER root
-RUN microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 poetry && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 poetry && microdnf clean all && rm -rf /var/cache/yum
 USER queil
 
 RUN code-server --install-extension ms-python.python
 
 # VARIANT - DEVOPS
 
-FROM base as devops
+FROM ghcr.io/queil/image:latest as devops
 
 ARG SOPS_VER=3.7.3
 ARG AWS_VAULT_VER=7.2.0
@@ -150,6 +148,8 @@ RUN curl -sSL https://github.com/mozilla/sops/releases/download/v${SOPS_VER}/sop
     chmod +x /usr/bin/sops && \
     curl -sSL https://github.com/99designs/aws-vault/releases/download/v${AWS_VAULT_VER}/aws-vault-linux-amd64 -o /usr/bin/aws-vault && \
     chmod +x /usr/bin/aws-vault && \
-    microdnf update -y && microdnf install -y --nodocs --setopt install_weak_deps=0 awscli2 && microdnf clean all && rm -rf /var/cache/yum
+    curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
+    unzip awscliv2.zip && \
+    ./aws/install
 
 USER queil
