@@ -152,4 +152,6 @@ RUN curl -sSL https://github.com/mozilla/sops/releases/download/v${SOPS_VER}/sop
     unzip awscliv2.zip && \
     ./aws/install
 
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 docker-compose && microdnf clean all && rm -rf /var/cache/yum
+
 USER queil
