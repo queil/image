@@ -150,7 +150,8 @@ RUN curl -sSL https://github.com/mozilla/sops/releases/download/v${SOPS_VER}/sop
     chmod +x /usr/bin/aws-vault && \
     curl -sSL https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && \
     unzip awscliv2.zip && \
-    ./aws/install
+    ./aws/install && \
+    rm ./awscliv2.zip && rm ./aws -r
 
 RUN microdnf install -y --nodocs --setopt install_weak_deps=0 docker-compose && microdnf clean all && rm -rf /var/cache/yum
 
