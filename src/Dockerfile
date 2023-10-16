@@ -7,7 +7,7 @@ ARG HOME=/home/$USER
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    systemd tar unzip bash-completion git micro jq dnsutils htop which procps-ng \
+    systemd tar unzip bash-completion git micro jq dnsutils htop which procps-ng openssh-server \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     rpm --setcaps shadow-utils 2>/dev/null
 
