@@ -19,6 +19,8 @@ jobs:
       - name: "Fix no space left on device"
         run: rm -rf /opt/hostedtoolcache
 
+      # -- first build & push base so it can be reused downstream
+     
       - name: base
         id: base
         uses: redhat-actions/buildah-build@v2
@@ -28,6 +30,22 @@ jobs:
           context: ./src
           containerfiles: |
             ./src/Containerfile
+
+      - name: Log in to the GitHub Container registry
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push base
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.base.outputs.image }}
+          tags: ${{ steps.base.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
+      # -- build the rest of the variants
 
       - name: devops
         id: devops
@@ -68,20 +86,6 @@ jobs:
           context: ./src
           containerfiles: |
             ./src/python.Containerfile
-
-      - name: Log in to the GitHub Container registry
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push base
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.base.outputs.image }}
-          tags: ${{ steps.base.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
 
       - name: Push devops
         uses: redhat-actions/push-to-registry@v2
