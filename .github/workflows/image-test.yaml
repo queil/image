@@ -20,7 +20,7 @@ jobs:
         run: rm -rf /opt/hostedtoolcache
 
       - name: base
-        id: build-image
+        id: base
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
@@ -30,7 +30,7 @@ jobs:
             ./src/Containerfile
 
       - name: devops
-        id: build-image
+        id: devops
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
