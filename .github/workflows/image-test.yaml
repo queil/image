@@ -47,7 +47,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push base
-        id: push-to-ghcr
         uses: redhat-actions/push-to-registry@v2
         with:
           image: ${{ steps.base.outputs.image }}
@@ -55,7 +54,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
 
       - name: Push devops
-        id: push-to-ghcr
         uses: redhat-actions/push-to-registry@v2
         with:
           image: ${{ steps.devops.outputs.image }}
