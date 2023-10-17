@@ -11,6 +11,8 @@ RUN microdnf update -y && \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     rpm --setcaps shadow-utils 2>/dev/null
 
+RUN ssh-keygen -A
+
 RUN adduser $USER && chown $USER -R $HOME && \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subuid; \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subgid;
