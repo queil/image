@@ -39,6 +39,16 @@ jobs:
           containerfiles: |
             ./src/devops.Containerfile
 
+      - name: dotnet-6
+        id: dotnet6
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: dotnet-6
+          context: ./src
+          containerfiles: |
+            ./src/dotnet-6.Containerfile
+
       - name: Log in to the GitHub Container registry
         uses: redhat-actions/podman-login@v1
         with:
@@ -58,5 +68,12 @@ jobs:
         with:
           image: ${{ steps.devops.outputs.image }}
           tags: ${{ steps.devops.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+          
+      - name: Push dotnet-6
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.dotnet6.outputs.image }}
+          tags: ${{ steps.dotnet6.outputs.tags }}
           registry: ${{ env.REGISTRY }}
           

@@ -81,28 +81,6 @@ COPY --chown=$USER ./home/queil/ $HOME/
 
 RUN echo '. $HOME/.custom.sh' >> .bashrc
 
-# VARIANT - DOTNET
-
-FROM ghcr.io/queil/image:latest as dotnet-base
-
-ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
-ENV DOTNET_NOLOGO=true
-ENV PATH="${PATH}:${HOME}/.dotnet/tools"
-
-RUN code-server --install-extension Ionide.Ionide-fsharp
-
-FROM dotnet-base as dotnet-6
-
-USER root
-RUN microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-6.0 && microdnf clean all && rm -rf /var/cache/yum
-USER queil
-
-FROM ghcr.io/queil/image:latest as dotnet-7
-
-USER root
-RUN microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-7.0 && microdnf clean all && rm -rf /var/cache/yum
-USER queil
-
 # VARIANT - RUST
 
 FROM ghcr.io/queil/image:latest as rust
