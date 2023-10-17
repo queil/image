@@ -26,9 +26,18 @@ jobs:
           image: ${{ env.IMAGE_NAME }}
           tags: latest ${{ github.sha }}
           context: ./src
-          target: base
           containerfiles: |
             ./src/Containerfile
+
+      - name: devops
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: devops
+          context: ./src
+          containerfiles: |
+            ./src/devops.Containerfile
 
       - name: Log in to the GitHub Container registry
         uses: redhat-actions/podman-login@v1
@@ -37,7 +46,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push to GitHub Container Repository
+      - name: Push base
         id: push-to-ghcr
         uses: redhat-actions/push-to-registry@v2
         with:
@@ -45,3 +54,11 @@ jobs:
           tags: ${{ steps.base.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
+      - name: Push devops
+        id: push-to-ghcr
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.devops.outputs.image }}
+          tags: ${{ steps.devops.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+          
