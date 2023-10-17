@@ -49,6 +49,26 @@ jobs:
           containerfiles: |
             ./src/dotnet-6.Containerfile
 
+      - name: rust
+        id: rust
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: rust
+          context: ./src
+          containerfiles: |
+            ./src/rust.Containerfile
+
+      - name: python
+        id: python
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: python
+          context: ./src
+          containerfiles: |
+            ./src/python.Containerfile
+
       - name: Log in to the GitHub Container registry
         uses: redhat-actions/podman-login@v1
         with:
@@ -77,3 +97,16 @@ jobs:
           tags: ${{ steps.dotnet6.outputs.tags }}
           registry: ${{ env.REGISTRY }}
           
+      - name: Push rust
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.rust.outputs.image }}
+          tags: ${{ steps.rust.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
+      - name: Push python
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.python.outputs.image }}
+          tags: ${{ steps.python.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
