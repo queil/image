@@ -67,6 +67,16 @@ jobs:
           containerfiles: |
             ./src/dotnet-6.Containerfile
 
+      - name: dotnet-7
+        id: dotnet7
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: dotnet-7
+          context: ./src
+          containerfiles: |
+            ./src/dotnet-7.Containerfile
+
       - name: rust
         id: rust
         uses: redhat-actions/buildah-build@v2
@@ -99,6 +109,13 @@ jobs:
         with:
           image: ${{ steps.dotnet6.outputs.image }}
           tags: ${{ steps.dotnet6.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
+      - name: Push dotnet-7
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.dotnet7.outputs.image }}
+          tags: ${{ steps.dotnet7.outputs.tags }}
           registry: ${{ env.REGISTRY }}
           
       - name: Push rust
