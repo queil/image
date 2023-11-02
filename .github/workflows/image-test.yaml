@@ -57,15 +57,15 @@ jobs:
           containerfiles: |
             ./src/devops.Containerfile
 
-      - name: dotnet-6
-        id: dotnet6
+      - name: dotnet-all
+        id: dotnetall
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: dotnet-6
+          tags: dotnet-all
           context: ./src
           containerfiles: |
-            ./src/dotnet-6.Containerfile
+            ./src/dotnet-all.Containerfile
 
       - name: dotnet-7
         id: dotnet7
@@ -104,11 +104,11 @@ jobs:
           tags: ${{ steps.devops.outputs.tags }}
           registry: ${{ env.REGISTRY }}
           
-      - name: Push dotnet-6
+      - name: Push dotnet-all
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.dotnet6.outputs.image }}
-          tags: ${{ steps.dotnet6.outputs.tags }}
+          image: ${{ steps.dotnetall.outputs.image }}
+          tags: ${{ steps.dotnetall.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
       - name: Push dotnet-7
