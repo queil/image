@@ -47,6 +47,16 @@ jobs:
 
       # -- build the rest of the variants
 
+      - name: hugo
+        id: hugo
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: hugo
+          context: ./src
+          containerfiles: |
+            ./src/hugo.Containerfile
+
       - name: devops
         id: devops
         uses: redhat-actions/buildah-build@v2
@@ -96,6 +106,13 @@ jobs:
           context: ./src
           containerfiles: |
             ./src/python.Containerfile
+
+      - name: Push hugo
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.hugo.outputs.image }}
+          tags: ${{ steps.hugo.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
 
       - name: Push devops
         uses: redhat-actions/push-to-registry@v2
