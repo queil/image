@@ -77,15 +77,15 @@ jobs:
           containerfiles: |
             ./src/dotnet-all.Containerfile
 
-      - name: dotnet-8
-        id: dotnet8
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: dotnet-8
-          context: ./src
-          containerfiles: |
-            ./src/dotnet-8.Containerfile
+      # - name: dotnet-8
+        # id: dotnet8
+        # uses: redhat-actions/buildah-build@v2
+        # with:
+          # image: ${{ env.IMAGE_NAME }}
+          # tags: dotnet-8
+          # context: ./src
+          # containerfiles: |
+            # ./src/dotnet-8.Containerfile
 
       - name: rust
         id: rust
@@ -128,12 +128,12 @@ jobs:
           tags: ${{ steps.dotnetall.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
-      - name: Push dotnet-8
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.dotnet8.outputs.image }}
-          tags: ${{ steps.dotnet8.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      # - name: Push dotnet-8
+        # uses: redhat-actions/push-to-registry@v2
+        # with:
+          # image: ${{ steps.dotnet8.outputs.image }}
+          # tags: ${{ steps.dotnet8.outputs.tags }}
+          # registry: ${{ env.REGISTRY }}
           
       - name: Push rust
         uses: redhat-actions/push-to-registry@v2
