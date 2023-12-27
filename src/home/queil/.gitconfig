@@ -3,4 +3,4 @@
 [includeIf "hasconfig:remote.*.url:git@gitlab.com*/**"]
     path = .gitconfig-gitlab
 [core]
-    editor = nano
+    editor = micro
