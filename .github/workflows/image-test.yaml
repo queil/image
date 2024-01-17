@@ -67,6 +67,16 @@ jobs:
           containerfiles: |
             ./src/devops.Containerfile
 
+      - name: cdk
+        id: cdk
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: cdk
+          context: ./src
+          containerfiles: |
+            ./src/cdk.Containerfile
+
       - name: dotnet-all
         id: dotnetall
         uses: redhat-actions/buildah-build@v2
@@ -120,7 +130,14 @@ jobs:
           image: ${{ steps.devops.outputs.image }}
           tags: ${{ steps.devops.outputs.tags }}
           registry: ${{ env.REGISTRY }}
-          
+
+      - name: Push cdk
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.cdk.outputs.image }}
+          tags: ${{ steps.cdk.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
       - name: Push dotnet-all
         uses: redhat-actions/push-to-registry@v2
         with:
