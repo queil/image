@@ -1,5 +1,5 @@
 {
     "clipboard": "terminal",
-    "colorscheme": "simple",
+    "colorscheme": "material-tc",
     "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled"
 }

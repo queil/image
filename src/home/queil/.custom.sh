@@ -10,8 +10,12 @@ alias nano=micro
 
 eval "$(starship init bash)"
 
+# ENV VARS
+
 export CONTAINER_NAME=$(cat /etc/hostname)
 export PATH=$HOME/.local/bin:$PATH
+export COLORTERM=truecolor
+export MICRO_TRUECOLOR=1
 
 # SET WINDOW TITLE
 
