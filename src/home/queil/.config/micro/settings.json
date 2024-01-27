@@ -1,5 +1,7 @@
 {
     "clipboard": "terminal",
     "colorscheme": "material-tc",
-    "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled"
+    "diffgutter": true,
+    "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled",
+    "tabstospaces": true
 }
