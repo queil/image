@@ -2,6 +2,7 @@
     "clipboard": "terminal",
     "colorscheme": "material-tc",
     "diffgutter": true,
-    "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled",
+    "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled --project-graph-enabled",
+    "mkparents": true,
     "tabstospaces": true
 }
