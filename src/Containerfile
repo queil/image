@@ -10,6 +10,7 @@ RUN microdnf update -y && \
     systemd tar unzip bash-completion git micro jq dnsutils htop which procps-ng openssh-server \
     https://github.com/PowerShell/PowerShell/releases/download/v7.4.0/powershell-7.4.0-1.rh.x86_64.rpm \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
     rpm --setcaps shadow-utils 2>/dev/null
 
 RUN adduser $USER && chown $USER -R $HOME && \
