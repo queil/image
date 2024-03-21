@@ -87,13 +87,6 @@ jobs:
 
       # ---- HUGO ----
 
-      - name: Push hugo
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.hugo.outputs.image }}
-          tags: ${{ steps.hugo.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
-
       - name: hugo
         id: hugo
         uses: redhat-actions/buildah-build@v2
@@ -104,14 +97,14 @@ jobs:
           containerfiles: |
             ./src/hugo.Containerfile
 
-      # ---- MKDOCS ----
-
-      - name: Push mkdocs
+      - name: Push hugo
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.mkdocs.outputs.image }}
-          tags: ${{ steps.mkdocs.outputs.tags }}
+          image: ${{ steps.hugo.outputs.image }}
+          tags: ${{ steps.hugo.outputs.tags }}
           registry: ${{ env.REGISTRY }}
+
+      # ---- MKDOCS ----
 
       - name: mkdocs
         id: mkdocs
@@ -122,6 +115,14 @@ jobs:
           context: ./src
           containerfiles: |
             ./src/mkdocs.Containerfile
+
+      - name: Push mkdocs
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.mkdocs.outputs.image }}
+          tags: ${{ steps.mkdocs.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
 
       # ---- CDK ----
 
