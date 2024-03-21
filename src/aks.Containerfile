@@ -15,4 +15,12 @@ RUN curl -sSL "https://github.com/kubernetes-sigs/kustomize/releases/download/ku
     mv /tmp/kustomize /usr/bin && chmod +x /usr/bin/kustomize && \
     rm /tmp/kustomize.tar.gz
 
+
+ARG KUBESEAL_VER=0.26.1
+
+RUN curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VER}/kubeseal-${KUBESEAL_VER}-linux-amd64.tar.gz" -o /tmp/kubeseal.tar.gz && \
+    tar -zxvf /tmp/kubeseal.tar.gz -C /tmp && \
+    mv /tmp/kubeseal /usr/bin && chmod +x /usr/bin/kubeseal && \
+    rm /tmp/kubeseal.tar.gz
+
 USER queil
