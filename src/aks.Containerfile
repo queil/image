@@ -24,3 +24,6 @@ RUN curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/
     rm /tmp/kubeseal.tar.gz
 
 USER queil
+
+RUN echo 'alias k=kubectl' >> .bashrc && \
+    echo "alias kb='kustomize build'" >> .bashrc
