@@ -1,5 +1,9 @@
 // If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
 keybinds {
+
+    unbind "Ctrl q"
+    unbind "Ctrl s"
+
     normal {
         // uncomment this and adjust key if using copy_on_select=false
         // bind "Alt c" { Copy; }
@@ -83,6 +87,7 @@ keybinds {
         // bind "Alt c" { Copy; }
     }
     search {
+
         bind "Alt s" { SwitchToMode "Normal"; }
         bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
         bind "j" "Down" { ScrollDown; }
