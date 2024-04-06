@@ -7,7 +7,8 @@ ARG HOME=/home/$USER
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    systemd tar unzip bash-completion git micro jq dnsutils htop which procps-ng openssh-server \
+    systemd tar unzip bash-completion git micro jq dnsutils \
+    iproute htop which procps-ng openssh-server \
     https://github.com/PowerShell/PowerShell/releases/download/v7.4.0/powershell-7.4.0-1.rh.x86_64.rpm \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -76,6 +77,10 @@ RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zell
     tar -zxvf /tmp/zellij-x86_64-unknown-linux-musl.tar.gz -C /tmp && \
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij-x86_64-unknown-linux-musl.tar.gz
+
+ARG SOPS_VER=3.8.1
+RUN curl -sSL https://github.com/mozilla/sops/releases/download/v${SOPS_VER}/sops-v${SOPS_VER}.linux.amd64 -o /usr/bin/sops && \
+    chmod +x /usr/bin/sops
 
 RUN ln -s $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/bin/code-server /usr/bin/code-server
 USER $USER
