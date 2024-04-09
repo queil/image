@@ -4,7 +4,7 @@
 
 alias gr='cd $(git rev-parse --show-toplevel)'
 alias ga='git add'
-alias st='git status'
+alias st='git-status.sh'
 alias di='git diff'
 alias co='git checkout'
 alias cb='git checkout -b'
