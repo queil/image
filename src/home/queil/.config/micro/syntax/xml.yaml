@@ -1,7 +1,7 @@
 filetype: xml
 
 detect:
-    filename: "\\.(xml|sgml?|rng|svg|plist|?sproj)$"
+    filename: "\\.(xml|sgml?|rng|svg|plist|csproj|fsproj)$"
     header: "<\\?xml.*\\?>"
 
 rules:
