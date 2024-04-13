@@ -11,6 +11,7 @@ export VSCODE_GIT_HASH=$(cat "$VSCODE_EXTRACTED_PATH/product.json" | jq -r .comm
 echo "VSCODE_GIT_HASH: $VSCODE_GIT_HASH"
 export BIN_DIR="$HOME/.vscode-server/bin/$VSCODE_GIT_HASH"
 mkdir -p $BIN_DIR
+mv $VSCODE_EXTRACTED_PATH $BIN_DIR
 #tar -zxvf $VSCODE_TAR_GZ -C $BIN_DIR --strip 1
 touch $BIN_DIR/0
 rm $VSCODE_TAR_GZ
