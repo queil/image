@@ -78,6 +78,10 @@ WORKDIR $INIT_DIR
 
 ADD --chown=$USER https://api.github.com/repos/queil/image/git/refs/heads/$INIT_BRANCH $HOME/.git-ref
 
+USER root
+RUN chown $USER $INIT_DIR
+USER $USER
+
 RUN git clone --no-checkout $INIT_REPO . && \
     git sparse-checkout init --cone && \
     git sparse-checkout set ".$INIT_DIR" && \
