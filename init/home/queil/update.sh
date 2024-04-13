@@ -4,6 +4,8 @@ set -e
 cd /init
 git pull
 
+cp ./init$HOME -R /home/
+
 # vscode-server update
 
 export SERVER_BIN_DIR="$HOME/.vscode-server/bin"
@@ -23,8 +25,6 @@ export CURRENT_VER_DIR="$SERVER_BIN_DIR/$VSCODE_GIT_HASH"
 ls $CURRENT_VER_DIR && rm $VSCODE_EXTRACTED_PATH -rf || mv "$VSCODE_EXTRACTED_PATH" "$CURRENT_VER_DIR"
 touch $CURRENT_VER_DIR/0
 rm $VSCODE_TAR_GZ
-
-cp ./init$HOME -R /home/
 
 ln -sf $CURRENT_VER_DIR/bin/code-server $HOME/.local/bin/code-server
 
