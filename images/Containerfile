@@ -17,8 +17,8 @@ RUN adduser $USER && chown $USER -R $HOME && \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subuid; \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subgid;
 
-COPY containers.conf /etc/containers/containers.conf
-COPY podman-containers.conf $HOME/.config/containers/containers.conf
+COPY images/containers.conf /etc/containers/containers.conf
+COPY images/podman-containers.conf $HOME/.config/containers/containers.conf
 
 RUN chmod 0755 /usr/bin/newuidmap && chmod 0755 /usr/bin/newgidmap
 
@@ -60,16 +60,6 @@ USER $USER
 
 RUN systemctl --user enable podman.socket
 
-RUN mkdir -p $HOME/.local/bin
-
-RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o /tmp/vscode-server-linux-x64.tar.gz && \
-    tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C /tmp && \
-    export VSCODE_GIT_HASH=$(cat /tmp/vscode/product.json | jq -r .commit) && \
-    mkdir -p $HOME/.vscode-server/bin/$VSCODE_GIT_HASH && \
-    tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C $HOME/.vscode-server/bin/$VSCODE_GIT_HASH --strip 1 && \
-    touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
-    rm /tmp/vscode-server-linux-x64.tar.gz
-
 USER root
 
 RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij-x86_64-unknown-linux-musl.tar.gz && \
@@ -77,14 +67,27 @@ RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zell
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij-x86_64-unknown-linux-musl.tar.gz
 
-RUN ln -s $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/bin/code-server /usr/bin/code-server
+
 USER $USER
 
-# global vscode extensions
+ARG INIT_REPO=https://github.com/queil/image
+ARG INIT_BRANCH=init-home-2
+ARG INIT_DIR=/init
 
+WORKDIR $INIT_DIR
+
+ADD --chown=$USER https://api.github.com/repos/queil/image/git/refs/heads/$INIT_BRANCH $HOME/.git-ref
+
+RUN git clone --no-checkout $INIT_REPO . && \
+    git sparse-checkout init --cone && \
+    git sparse-checkout set ".$INIT_DIR" && \
+    git checkout $INIT_BRANCH && \
+    ".$INIT_DIR/home/$USER/update.sh"
+
+ENV PATH="$HOME/.local/bin:${PATH}" 
+
+# POST-INIT
 RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
-COPY --chown=$USER ./home/queil/ $HOME/
-
-RUN echo '. $HOME/.custom.sh' >> .bashrc
+WORKDIR $HOME

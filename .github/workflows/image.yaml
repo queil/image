@@ -27,9 +27,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: latest ${{ github.sha }}
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/Containerfile
+            ./images/Containerfile
 
       - name: Log in to the GitHub Container registry
         uses: redhat-actions/podman-login@v1
@@ -55,9 +55,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: aks
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/aks.Containerfile
+            ./images/aks.Containerfile
 
       - name: Push aks
         uses: redhat-actions/push-to-registry@v2
@@ -74,9 +74,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: devops
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/devops.Containerfile
+            ./images/devops.Containerfile
 
       - name: Push devops
         uses: redhat-actions/push-to-registry@v2
@@ -93,9 +93,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: hugo
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/hugo.Containerfile
+            ./images/hugo.Containerfile
 
       - name: Push hugo
         uses: redhat-actions/push-to-registry@v2
@@ -112,9 +112,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: mkdocs
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/mkdocs.Containerfile
+            ./images/mkdocs.Containerfile
 
       - name: Push mkdocs
         uses: redhat-actions/push-to-registry@v2
@@ -132,9 +132,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: cdk
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/cdk.Containerfile
+            ./images/cdk.Containerfile
 
       - name: Push cdk
         uses: redhat-actions/push-to-registry@v2
@@ -151,9 +151,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: dotnet-all
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/dotnet-all.Containerfile
+            ./images/dotnet-all.Containerfile
 
       - name: Push dotnet-all
         uses: redhat-actions/push-to-registry@v2
@@ -170,9 +170,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: dotnet-8
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/dotnet-8.Containerfile
+            ./images/dotnet-8.Containerfile
 
 
       - name: Push dotnet-8
@@ -190,9 +190,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: rust
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/rust.Containerfile
+            ./images/rust.Containerfile
 
       - name: Push rust
         uses: redhat-actions/push-to-registry@v2
@@ -209,9 +209,9 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: python
-          context: ./src
+          context: .
           containerfiles: |
-            ./src/python.Containerfile
+            ./images/python.Containerfile
 
       - name: Push python
         uses: redhat-actions/push-to-registry@v2
