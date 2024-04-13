@@ -23,4 +23,4 @@ rm $VSCODE_TAR_GZ
 
 cp ./init$HOME -R /home/
 
-ln -s $CURRENT_VER_DIR/bin/code-server $HOME/.local/bin/code-server
+ln -sf $CURRENT_VER_DIR/bin/code-server $HOME/.local/bin/code-server
