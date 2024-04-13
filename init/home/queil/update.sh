@@ -14,4 +14,4 @@ curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o
 
 cp ./init$HOME -R /home/
 
-ln -s $BIN_DIR/bin/code-server /usr/bin/code-server
+ln -s $BIN_DIR/bin/code-server $HOME/.local/bin/code-server
