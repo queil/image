@@ -84,8 +84,8 @@ RUN git clone --no-checkout $INIT_REPO . && \
     git checkout $INIT_BRANCH && \
     ".$INIT_DIR/home/$USER/update.sh"
 
-RUN ls -la $HOME/.local/bin
+ARG ENV="$HOME/.local/bin:${PATH}" 
 
 # POST-INIT
-#RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
-#    code-server --install-extension luxcium.pop-n-lock-theme-vscode
+RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
+    code-server --install-extension luxcium.pop-n-lock-theme-vscode
