@@ -84,7 +84,7 @@ RUN git clone --no-checkout $INIT_REPO . && \
     git checkout $INIT_BRANCH && \
     ".$INIT_DIR/home/$USER/update.sh"
 
-ARG ENV="$HOME/.local/bin:${PATH}" 
+ENV PATH="$HOME/.local/bin:${PATH}" 
 
 # POST-INIT
 RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
