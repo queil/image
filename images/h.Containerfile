@@ -13,6 +13,6 @@ RUN git clone --no-checkout $INIT_REPO . && \
     git sparse-checkout init --cone && \
     git sparse-checkout set ".$INIT_DIR" && \
     git checkout $INIT_BRANCH && \
-    ./init.sh
+    ".$INIT_DIR/init.sh"
 
 FROM init
