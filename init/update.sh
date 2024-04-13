@@ -1,2 +1,3 @@
 git pull
-cp /init/home/queil -R /home/
+ls -la
+cp ./home/queil -R /home/
