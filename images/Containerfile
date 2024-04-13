@@ -60,16 +60,6 @@ USER $USER
 
 RUN systemctl --user enable podman.socket
 
-RUN mkdir -p $HOME/.local/bin
-
-RUN curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o /tmp/vscode-server-linux-x64.tar.gz && \
-    tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C /tmp && \
-    export VSCODE_GIT_HASH=$(cat /tmp/vscode/product.json | jq -r .commit) && \
-    mkdir -p $HOME/.vscode-server/bin/$VSCODE_GIT_HASH && \
-    tar -zxvf /tmp/vscode-server-linux-x64.tar.gz -C $HOME/.vscode-server/bin/$VSCODE_GIT_HASH --strip 1 && \
-    touch $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/0 && \
-    rm /tmp/vscode-server-linux-x64.tar.gz
-
 USER root
 
 RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij-x86_64-unknown-linux-musl.tar.gz && \
@@ -97,4 +87,4 @@ RUN git clone --no-checkout $INIT_REPO . && \
     git sparse-checkout init --cone && \
     git sparse-checkout set ".$INIT_DIR" && \
     git checkout $INIT_BRANCH && \
-    ".$INIT_DIR/update.sh"
+    ".$INIT_DIR/home/$USER/update.sh"
