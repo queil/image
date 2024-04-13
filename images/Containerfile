@@ -76,7 +76,7 @@ ARG INIT_DIR=/init
 
 WORKDIR $INIT_DIR
 
-ADD https://api.github.com/repos/queil/image/git/refs/heads/$INIT_BRANCH $HOME/.git-ref
+ADD --chown=$USER https://api.github.com/repos/queil/image/git/refs/heads/$INIT_BRANCH $HOME/.git-ref
 
 RUN git clone --no-checkout $INIT_REPO . && \
     git sparse-checkout init --cone && \
@@ -87,5 +87,5 @@ RUN git clone --no-checkout $INIT_REPO . && \
 RUN ls -la $HOME/.local/bin
 
 # POST-INIT
-RUN $HOME/.local/bin/code-server --install-extension streetsidesoftware.code-spell-checker && \
-    $HOME/.local/bin/code-server --install-extension luxcium.pop-n-lock-theme-vscode
+#RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
+#    code-server --install-extension luxcium.pop-n-lock-theme-vscode
