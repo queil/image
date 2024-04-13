@@ -24,3 +24,5 @@ rm $VSCODE_TAR_GZ
 cp ./init$HOME -R /home/
 
 ln -sf $CURRENT_VER_DIR/bin/code-server $HOME/.local/bin/code-server
+
+echo "Update OK"
