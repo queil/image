@@ -17,8 +17,8 @@ RUN adduser $USER && chown $USER -R $HOME && \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subuid; \
     echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subgid;
 
-COPY containers.conf /etc/containers/containers.conf
-COPY podman-containers.conf $HOME/.config/containers/containers.conf
+COPY images/containers.conf /etc/containers/containers.conf
+COPY images/podman-containers.conf $HOME/.config/containers/containers.conf
 
 RUN chmod 0755 /usr/bin/newuidmap && chmod 0755 /usr/bin/newgidmap
 
@@ -84,11 +84,6 @@ USER $USER
 
 RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
-
-COPY --chown=$USER ./home/queil/ $HOME/
-
-RUN echo '. $HOME/.custom.sh' >> .bashrc
-
 
 ARG INIT_REPO=https://github.com/queil/image
 ARG INIT_BRANCH=init-home-2
