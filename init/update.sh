@@ -1,3 +1,4 @@
+cd $(git rev-parse --show-toplevel)
 git pull
-ls -la
 cp ./init/home/queil -R /home/
+exit
