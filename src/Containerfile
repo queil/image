@@ -85,6 +85,18 @@ USER $USER
 RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
-COPY --chown=$USER ./home/queil/ $HOME/
+#COPY --chown=$USER ./home/queil/ $HOME/
 
-RUN echo '. $HOME/.custom.sh' >> .bashrc
+#RUN echo '. $HOME/.custom.sh' >> .bashrc
+
+# --- 
+
+ARG $HOMESOURCEREPO=https://github.com/queil/image
+ARG $HOMESOURCE=/var/home/
+WORKDIR $HOMESOURCE
+
+RUN git clone --no-checkout $HOMESOURCEREPO "$USER" && \
+    cd "$HOMESOURCE/$USER" && \
+    git sparse-checkout init --cone && \
+    git sparse-checkout set ".$HOMESOURCE/$USER" && \
+    git checkout main
