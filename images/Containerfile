@@ -67,13 +67,8 @@ RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zell
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij-x86_64-unknown-linux-musl.tar.gz
 
-RUN ln -s $HOME/.vscode-server/bin/$VSCODE_GIT_HASH/bin/code-server /usr/bin/code-server
+
 USER $USER
-
-# global vscode extensions
-
-RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
-    code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
 ARG INIT_REPO=https://github.com/queil/image
 ARG INIT_BRANCH=init-home-2
@@ -88,3 +83,7 @@ RUN git clone --no-checkout $INIT_REPO . && \
     git sparse-checkout set ".$INIT_DIR" && \
     git checkout $INIT_BRANCH && \
     ".$INIT_DIR/home/$USER/update.sh"
+
+# POST-INIT
+RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
+    code-server --install-extension luxcium.pop-n-lock-theme-vscode
