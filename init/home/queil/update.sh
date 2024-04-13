@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 cd /init
 git pull
 
