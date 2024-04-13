@@ -18,7 +18,7 @@ eval "$(starship init bash)"
 
 # ENV VARS
 
-export CONTAINER_NAME=$(cat /etc/hostname)
+export CONTAINER_NAME=$(cat /etc/hostname) || 'default'
 export PATH=$HOME/.local/bin:$PATH
 export COLORTERM=truecolor
 export MICRO_TRUECOLOR=1
