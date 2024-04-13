@@ -5,7 +5,7 @@ export VSCODE_TAR_GZ=/tmp/vscode-server-linux-x64.tar.gz
 
 curl -sSL https://update.code.visualstudio.com/latest/server-linux-x64/stable -o $VSCODE_TAR_GZ
 tar -zxvf $VSCODE_TAR_GZ -C /tmp
-export VSCODE_GIT_HASH=$(cat /tmp/vscode/product.json | jq -r .commit)
+export VSCODE_GIT_HASH=$(cat /tmp/vscode-server-linux-x64/product.json | jq -r .commit)
 echo "VSCODE_GIT_HASH: $VSCODE_GIT_HASH"
 export BIN_DIR=.vscode-server/bin/$VSCODE_GIT_HASH
 mkdir -p $BIN_DIR
