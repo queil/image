@@ -1,4 +1,4 @@
-cd $(git rev-parse --show-toplevel)
+cd /init
 git pull
 
 # vscode-server update
