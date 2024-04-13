@@ -8,29 +8,18 @@ ARG HOME=/home/$USER
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
     systemd tar unzip bash-completion git git-delta micro jq dnsutils \
-    iproute htop which procps-ng openssh-server xpanes \
+    iproute htop which procps-ng openssh-server tree \
     podman podman-compose slirp4netns fuse-overlayfs --exclude container-selinux && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     rpm --setcaps shadow-utils 2>/dev/null
 
-RUN adduser $USER && chown $USER -R $HOME && \
-    echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subuid; \
-    echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subgid;
+RUN adduser $USER && chown $USER -R $HOME
 
-COPY containers.conf /etc/containers/containers.conf
-COPY podman-containers.conf $HOME/.config/containers/containers.conf
+#COPY --chmod=644 ./etc/containers/ /etc/
 
 RUN chmod 0755 /usr/bin/newuidmap && chmod 0755 /usr/bin/newgidmap
 
-#Copy & modify the defaults to provide reference if runtime changes needed.
-#Changes here are required for running with fuse-overlay storage inside container.
-RUN sed -e 's|^#mount_program|mount_program|g' \
-           -e '/additionalimage.*/a "/var/lib/shared",' \
-           -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' \
-           /usr/share/containers/storage.conf \
-           > /etc/containers/storage.conf
-
-RUN mkdir -p /home/$USER/.local/share/containers && \
+RUN #mkdir -p /home/$USER/.local/share/containers && \
     chown $USER:$USER -R /home/$USER && \
     chmod 644 /etc/containers/containers.conf
 
@@ -89,14 +78,4 @@ RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
 
 #RUN echo '. $HOME/.custom.sh' >> .bashrc
 
-# --- 
 
-ARG $HOMESOURCEREPO=https://github.com/queil/image
-ARG $HOMESOURCE=/var/home/
-WORKDIR $HOMESOURCE
-
-RUN git clone --no-checkout $HOMESOURCEREPO "$USER" && \
-    cd "$HOMESOURCE/$USER" && \
-    git sparse-checkout init --cone && \
-    git sparse-checkout set ".$HOMESOURCE/$USER" && \
-    git checkout main
