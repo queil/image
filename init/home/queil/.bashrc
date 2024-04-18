@@ -56,3 +56,5 @@ function set_win_title(){
 starship_precmd_user_func="set_win_title"
 
 . ~/.image.bashrc
+
+source /home/queil/.config/broot/launcher/bash/br
