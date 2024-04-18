@@ -35,7 +35,7 @@ alias cb='git checkout -b'
 alias cm='git commit -m'
 alias pu='git push -u origin "$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"'
 alias pl='git pull'
-alias uuid='cat /proc/sys/kernel/random/uuid'
+alias uuid=uuidgen
 alias nano=micro
 
 eval "$(starship init bash)"
@@ -46,6 +46,7 @@ export CONTAINER_NAME=$(cat /etc/hostname)
 export PATH=$HOME/.local/bin:$PATH
 export COLORTERM=truecolor
 export MICRO_TRUECOLOR=1
+export EDITOR=micro
 
 # SET WINDOW TITLE
 
