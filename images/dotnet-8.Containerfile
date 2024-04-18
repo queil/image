@@ -12,3 +12,8 @@ USER queil
 RUN dotnet tool install -g fsautocomplete && dotnet tool install -g fantomas
 RUN mkdir -p ~/.config/micro/plug/lsp && \
     git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
+
+COPY <<EOF ~/.image.bashrc
+drf() { dotnet nuget locals --clear http-cache && dotnet restore --use-lock-file --force-evaluate }
+dlp() { dotnet list package --outdated }
+EOF
