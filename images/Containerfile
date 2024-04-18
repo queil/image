@@ -62,11 +62,15 @@ RUN systemctl --user enable podman.socket
 
 USER root
 
-RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij-x86_64-unknown-linux-musl.tar.gz && \
-    tar -zxvf /tmp/zellij-x86_64-unknown-linux-musl.tar.gz -C /tmp && \
+RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
+    tar -zxvf /tmp/zellij.tar.gz -C /tmp && \
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
-    rm /tmp/zellij-x86_64-unknown-linux-musl.tar.gz
+    rm /tmp/zellij.tar.gz
 
+RUN curl -sSL https://github.com/Canop/broot/releases/download/v1.36.1/broot-x86_64-linux-v1.36.1.zip -o /tmp/broot.zip && \
+    unzip /tmp/broot.zip -d /tmp && \
+    mv /tmp/broot /usr/bin && chmod +x /usr/bin/broot && \
+    rm /tmp/broot.zip
 
 USER $USER
 
