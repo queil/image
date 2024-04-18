@@ -4,10 +4,8 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
 ENV PATH="${PATH}:/home/queil/.dotnet/tools"
 
-COPY <<EOF $HOME/.image.bashrc
-drf() { dotnet nuget locals --clear http-cache && dotnet restore --use-lock-file --force-evaluate }
-dlp() { dotnet list package --outdated }
-EOF
+RUN echo "drf() { dotnet nuget locals --clear http-cache && dotnet restore --use-lock-file --force-evaluate }" >> $HOME/.image.bashrc && \
+    ehoc "dlp() { dotnet list package --outdated }" >> $HOME/.image.bashrc
 
 RUN code-server --install-extension Ionide.Ionide-fsharp
 
