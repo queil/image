@@ -1,5 +1,5 @@
 {
-    "clipboard": "terminal",
+    "clipboard": "internal",
     "colorscheme": "material-tc",
     "diffgutter": true,
     "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled --project-graph-enabled",
