@@ -71,7 +71,7 @@ RUN curl -sSL https://github.com/zellij-org/zellij/releases/latest/download/zell
 USER $USER
 
 ARG INIT_REPO=https://github.com/queil/image
-ARG INIT_BRANCH=init-home-2
+ARG INIT_BRANCH=main
 ARG INIT_DIR=/init
 
 WORKDIR $INIT_DIR
