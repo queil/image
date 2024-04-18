@@ -68,22 +68,22 @@ jobs:
 
       # ---- DEVOPS ----
 
-      - name: devops
-        id: devops
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: devops
-          context: .
-          containerfiles: |
-            ./images/devops.Containerfile
-
-      - name: Push devops
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.devops.outputs.image }}
-          tags: ${{ steps.devops.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      # - name: devops
+        # id: devops
+        # uses: redhat-actions/buildah-build@v2
+        # with:
+          # image: ${{ env.IMAGE_NAME }}
+          # tags: devops
+          # context: .
+          # containerfiles: |
+            # ./images/devops.Containerfile
+# 
+      # - name: Push devops
+        # uses: redhat-actions/push-to-registry@v2
+        # with:
+          # image: ${{ steps.devops.outputs.image }}
+          # tags: ${{ steps.devops.outputs.tags }}
+          # registry: ${{ env.REGISTRY }}
 
       # ---- HUGO ----
 
@@ -126,41 +126,41 @@ jobs:
 
       # ---- CDK ----
 
-      - name: cdk
-        id: cdk
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: cdk
-          context: .
-          containerfiles: |
-            ./images/cdk.Containerfile
-
-      - name: Push cdk
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.cdk.outputs.image }}
-          tags: ${{ steps.cdk.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      # - name: cdk
+        # id: cdk
+        # uses: redhat-actions/buildah-build@v2
+        # with:
+          # image: ${{ env.IMAGE_NAME }}
+          # tags: cdk
+          # context: .
+          # containerfiles: |
+            # ./images/cdk.Containerfile
+# 
+      # - name: Push cdk
+        # uses: redhat-actions/push-to-registry@v2
+        # with:
+          # image: ${{ steps.cdk.outputs.image }}
+          # tags: ${{ steps.cdk.outputs.tags }}
+          # registry: ${{ env.REGISTRY }}
 
       # ---- DOTNET-ALL ----
 
-      - name: dotnet-all
-        id: dotnetall
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: dotnet-all
-          context: .
-          containerfiles: |
-            ./images/dotnet-all.Containerfile
-
-      - name: Push dotnet-all
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.dotnetall.outputs.image }}
-          tags: ${{ steps.dotnetall.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      # - name: dotnet-all
+        # id: dotnetall
+        # uses: redhat-actions/buildah-build@v2
+        # with:
+          # image: ${{ env.IMAGE_NAME }}
+          # tags: dotnet-all
+          # context: .
+          # containerfiles: |
+            # ./images/dotnet-all.Containerfile
+# 
+      # - name: Push dotnet-all
+        # uses: redhat-actions/push-to-registry@v2
+        # with:
+          # image: ${{ steps.dotnetall.outputs.image }}
+          # tags: ${{ steps.dotnetall.outputs.tags }}
+          # registry: ${{ env.REGISTRY }}
 
       # ---- DOTNET 8 ----
 
@@ -184,38 +184,38 @@ jobs:
         
       # ---- RUST ----
 
-      - name: rust
-        id: rust
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: rust
-          context: .
-          containerfiles: |
-            ./images/rust.Containerfile
-
-      - name: Push rust
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.rust.outputs.image }}
-          tags: ${{ steps.rust.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
-
-      # ---- PYTHON ----
-
-      - name: python
-        id: python
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: python
-          context: .
-          containerfiles: |
-            ./images/python.Containerfile
-
-      - name: Push python
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.python.outputs.image }}
-          tags: ${{ steps.python.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      # - name: rust
+        # id: rust
+        # uses: redhat-actions/buildah-build@v2
+        # with:
+          # image: ${{ env.IMAGE_NAME }}
+          # tags: rust
+          # context: .
+          # containerfiles: |
+            # ./images/rust.Containerfile
+# 
+      # - name: Push rust
+        # uses: redhat-actions/push-to-registry@v2
+        # with:
+          # image: ${{ steps.rust.outputs.image }}
+          # tags: ${{ steps.rust.outputs.tags }}
+          # registry: ${{ env.REGISTRY }}
+# 
+      # # ---- PYTHON ----
+# 
+      # - name: python
+        # id: python
+        # uses: redhat-actions/buildah-build@v2
+        # with:
+          # image: ${{ env.IMAGE_NAME }}
+          # tags: python
+          # context: .
+          # containerfiles: |
+            # ./images/python.Containerfile
+# 
+      # - name: Push python
+        # uses: redhat-actions/push-to-registry@v2
+        # with:
+          # image: ${{ steps.python.outputs.image }}
+          # tags: ${{ steps.python.outputs.tags }}
+          # registry: ${{ env.REGISTRY }}
