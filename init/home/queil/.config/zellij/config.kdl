@@ -1,16 +1,16 @@
 keybinds clear-defaults=true {
     shared_except "locked" {
         bind "Ctrl g" { SwitchToMode "Locked"; } 
-        bind "Alt i" { Quit; }
+        bind "F10" { Quit; }
 
-        bind "Alt Left" { MoveFocus "Left"; }
-        bind "Alt Right" { MoveFocus "Right"; }
-        bind "Alt Down" { MoveFocus "Down"; }
-        bind "Alt Up" { MoveFocus "Up"; }
-        bind "Alt z" { FocusPreviousPane; }
-        bind "Alt x" { FocusNextPane; }
-        bind "Alt m" { SwitchFocus; }
-                
+        //bind "Alt Left" { MoveFocus "Left"; }
+        //bind "Alt Right" { MoveFocus "Right"; }
+        //bind "Alt Down" { MoveFocus "Down"; }
+        //bind "Alt Up" { MoveFocus "Up"; }
+        //bind "Alt z" { FocusPreviousPane; }
+        //bind "Alt x" { FocusNextPane; }
+        bind "F1" { ToggleFloatingPanes; SwitchFocus; }
+        bind "Alt F1" { SwitchFocus; }
     }
 
     pane {
@@ -56,4 +56,4 @@ theme "spacedust"
 default_layout "ide"
 mouse_mode false
 default_shell "bash"
-pane_frames false
+pane_frames true

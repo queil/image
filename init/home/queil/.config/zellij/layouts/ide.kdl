@@ -1,11 +1,7 @@
 layout {
-    //floating_panes {
-    //    pane x=0 y=0 width="25%" height="60%" command="broot"
-    //}
     pane split_direction="horizontal" {
         pane size="80%" split_direction="vertical" {
-            pane size="25%" command="broot"
-            pane size="75%"
+            pane command="broot"
         }
         pane size="20%"
     }
