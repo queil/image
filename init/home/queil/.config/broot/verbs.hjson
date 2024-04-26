@@ -27,9 +27,9 @@ verbs: [
     {
         invocation: edit
         shortcut: e
-        key: ctrl-e
+        key: enter
         apply_to: text_file
-        execution: "$EDITOR {file}"
+        execution: "zellij run -c -f -x 25% -y 0 --width 75% --height 80% -- micro {file}"
         leave_broot: false
     }
 
@@ -52,7 +52,7 @@ verbs: [
     #  the current directory or below
     {
         invocation: create {subpath}
-        execution: "$EDITOR {directory}/{subpath}"
+        execution: "zellij edit {directory}/{subpath}"
         leave_broot: false
     }
 
@@ -68,32 +68,23 @@ verbs: [
     # as an example to demonstrate rare standard groups like {file-stem}
     # and {file-dot-extension} and the auto_exec verb property which
     # allows verbs to stay unexecuted until you hit enter
-    {
-        invocation: "backup {version}"
-        key: ctrl-b
-        leave_broot: false
-        auto_exec: false
-        execution: "cp -r {file} {parent}/{file-stem}-{version}{file-dot-extension}"
-    }
-
-    # By default, `rm` does the system rm, and completely removes
-    # the file. If you prefer to have the file moved to the system
-    # trash, you may use the ':trash' internal with the verb below:
-    # {
-    #     invocation: "rm"
-    #     internal: "trash"
-    #     leave_broot: false
-    # }
+    #{
+    #    invocation: "backup {version}"
+    #    key: ctrl-b
+    #    leave_broot: false
+    #    auto_exec: false
+    #    execution: "cp -r {file} {parent}/{file-stem}-{version}{file-dot-extension}"
+    #}
 
     # This verb lets you launch a terminal on ctrl-T
     # (on exit you'll be back in broot)
-    {
-        invocation: terminal
-        key: ctrl-t
-        execution: "$SHELL"
-        set_working_dir: true
-        leave_broot: false
-    }
+    #{
+    #    invocation: terminal
+    #    key: ctrl-t
+    #    execution: "$SHELL"
+    #    set_working_dir: true
+    #    leave_broot: false
+    #}
 
     # Here's an example of a verb needing the shell capabilities.
     # It copies all children of the currently selected directory
@@ -147,8 +138,8 @@ verbs: [
 
     # You can reproduce the bindings of Norton Commander
     # on copying or moving to the other panel:
-    # {
     #     key: F5
+    # {
     #     external: "cp -r {file} {other-panel-directory}"
     #     leave_broot: false
     # }

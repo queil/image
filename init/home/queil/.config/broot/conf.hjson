@@ -150,10 +150,10 @@ special_paths: {
 # This mapping may be modified. You may want to dedicate the
 # empty prefix (the one which doesn't need a '/') to the
 # search mode you use most often. The example below makes it
-# easy to search on name rather than on the subpath.
 #
 # More information on
 #  https://dystroy.org/broot/input/#the-filtering-pattern
+# easy to search on name rather than on the subpath.
 #
 # search_modes: {
 #     <empty>: fuzzy name
@@ -204,7 +204,7 @@ content_search_max_file_size: 10MB
 # This makes it possible to use shortcuts like 'space-n', 
 # 'ctrl-alt-a-b', 'shift-space', etc.
 #
-enable_kitty_keyboard: false
+enable_kitty_keyboard: true
 
 ###############################################################
 # Imports
