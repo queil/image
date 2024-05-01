@@ -1,5 +1,15 @@
 layout {
-    pane split_direction="horizontal" {
-        pane command="broot" borderless=true
+    tab hide_floating_panes=true {
+        floating_panes {
+            pane {
+                x "10%"
+                y "10%"
+                height "80%"
+                width "80%"
+            }
+        }
+        pane split_direction="horizontal" {
+            pane command="broot" borderless=true
+        }
     }
 }
