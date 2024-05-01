@@ -1,8 +1,5 @@
 layout {
     pane split_direction="horizontal" {
-        pane size="80%" split_direction="vertical" {
-            pane command="broot"
-        }
-        pane size="20%"
+        pane command="broot" borderless=true
     }
 }
