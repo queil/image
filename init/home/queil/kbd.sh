@@ -5,9 +5,9 @@ src_root=$(git rev-parse --show-toplevel)
 repo_name=$(basename "$src_root")
 copy_root="/tmp/kbd/$repo_name"
 ref_dir="$copy_root/$kust_dir"
-ref_file="$ref_dir/ref.yaml"
-mod_file="$ref_dir/mod.yaml"
+ref_out="$ref_dir/.ref"
 mod_dir="$src_root/$kust_dir"
+mod_out="$ref_dir/.mod"
 
 echo "src_root: $src_root"
 echo "repo_name: $repo_name"
@@ -18,14 +18,15 @@ echo "ref_file: $ref_file"
 echo "mod_file: $mod_file"
 
 rm $copy_root -rf
-mkdir -p $ref_dir
+mkdir -p $ref_out
+mkdir -p $mod_out
 
 git -C "$src_root" archive HEAD | tar -x -C "$copy_root"
 
-echo "Building ref: $ref_dir -> $ref_file"
-kustomize build "$ref_dir" > $ref_file
-echo "Building mod: $mod_dir -> $mod_file"
-kustomize build "$mod_dir" > $mod_file
-echo "Delta"
-
-delta $ref_file $mod_file
+echo "Building ref: $ref_dir -> $ref_out"
+kustomize build "$ref_dir" -o $ref_out
+echo "Building mod: $mod_dir -> $mod_out"
+kustomize build "$mod_dir" -o $mod_out
+echo "delta"
+cd $ref_dir
+delta --relative-paths .ref .mod
