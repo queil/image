@@ -8,6 +8,7 @@ keybinds clear-defaults=true {
         bind "Alt Up" { MoveFocus "Up"; }
         bind "Alt q" { HalfPageScrollUp; }
         bind "Alt a" { HalfPageScrollDown; }
+        bind "Alt n" { NewPane "Down"; }
         bind "F1" { ToggleFloatingPanes; SwitchFocus; }
         bind "Alt F1" { SwitchFocus; }
     }
