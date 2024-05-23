@@ -23,7 +23,13 @@ RUN curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/
     mv /tmp/kubeseal /usr/bin && chmod +x /usr/bin/kubeseal && \
     rm /tmp/kubeseal.tar.gz
 
+ARG ARGO_WF_VER=3.5.6
+
+RUN curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v${ARGO_WF_VER}/argo-linux-amd64.gz && \
+    gunzip argo-linux-amd64.gz && \
+    chmod +x argo-linux-amd64 && mv ./argo-linux-amd64 /usr/bin/argo
+
 USER queil
 
-RUN echo 'alias k=kubectl' >> .bashrc && \
-    echo "alias kb='kustomize build'" >> .bashrc
+RUN echo 'alias k=kubectl' >> $HOME/.image.bashrc && \
+    echo 'alias kb="kustomize build"' >> $HOME/.image.bashrc

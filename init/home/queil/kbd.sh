@@ -21,7 +21,7 @@ rm $copy_root -rf
 mkdir -p $ref_out
 mkdir -p $mod_out
 
-git -C "$src_root" archive HEAD | tar -x -C "$copy_root"
+git -C "$src_root" archive main | tar -x -C "$copy_root"
 
 echo "Building ref: $ref_dir -> $ref_out"
 kustomize build "$ref_dir" -o $ref_out

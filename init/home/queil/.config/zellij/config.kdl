@@ -9,6 +9,10 @@ keybinds clear-defaults=true {
         bind "Alt q" { HalfPageScrollUp; }
         bind "Alt a" { HalfPageScrollDown; }
         bind "Alt n" { NewPane "Down"; }
+        bind "Alt =" "Alt +" { Resize "Increase"; }
+        bind "Alt -" { Resize "Decrease"; }
+        bind "Alt [" { PreviousSwapLayout; }
+        bind "Alt ]" { NextSwapLayout; }
         bind "F1" { ToggleFloatingPanes; SwitchFocus; }
         bind "Alt F1" { SwitchFocus; }
     }
