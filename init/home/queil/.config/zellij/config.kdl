@@ -14,7 +14,7 @@ keybinds clear-defaults=true {
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
         bind "F1" { ToggleFloatingPanes; SwitchFocus; }
-        bind "Alt F1" { SwitchFocus; }
+        bind "Alt /" { ToggleFocusFullscreen; }
     }
 }
 
@@ -43,7 +43,7 @@ themes {
 }
 
 theme "spacedust"
-default_layout "ide"
+#default_layout "ide"
 mouse_mode false
 default_shell "bash"
 pane_frames true
