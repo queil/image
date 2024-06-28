@@ -29,7 +29,7 @@ verbs: [
         shortcut: e
         key: enter
         apply_to: text_file
-        execution: "zellij run -c -i -- micro -xterm=true {file}"
+        execution: "micro -xterm=true {file}"
         leave_broot: false
     }
 
@@ -37,7 +37,7 @@ verbs: [
         invocation: kbd
         key: ctrl-k
         apply_to: directory
-        execution: "zellij run -d down -- ~/kbd.sh {file-git-relative}"
+        execution: "~/kbd.sh {file-git-relative}"
         leave_broot: false
     }
 
@@ -60,7 +60,7 @@ verbs: [
     #  the current directory or below
     {
         invocation: create {subpath}
-        execution: "zellij edit {directory}/{subpath}"
+        execution: "micro -xterm=true {directory}/{subpath}"
         leave_broot: false
     }
 
