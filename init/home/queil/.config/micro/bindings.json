@@ -1,6 +1,10 @@
 {
-    "Alt-/": "lua:comment.comment",
-    "CtrlUnderscore": "lua:comment.comment",
-    "AltLeft" : "None",
-    "AltRight" : "None"
+    "Alt-.": "command:lspcompletion",
+    "Alt-c": "lua:comment.comment",
+    "Alt-d": "command:definition",
+    "Alt-f": "command:format",
+    "Alt-k": "command:hover",
+    "Alt-r": "command:references",
+    "AltLeft": "None",
+    "AltRight": "None"
 }
