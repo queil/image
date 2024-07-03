@@ -1,1 +1,2 @@
 privileged: true
+shell: ["zellij", "-d"]
