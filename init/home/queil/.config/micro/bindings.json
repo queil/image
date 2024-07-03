@@ -1,5 +1,5 @@
 {
-    "AltSpace": "command:lspcompletion",
+    "Alt-.": "command:lspcompletion",
     "Alt-c": "lua:comment.comment",
     "Alt-d": "command:definition",
     "Alt-f": "command:format",
