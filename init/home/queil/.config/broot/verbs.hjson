@@ -34,6 +34,15 @@ verbs: [
     }
 
     {
+        invocation: zellij-run
+        shortcut: zr
+        key: alt-enter
+    
+        execution: "zellij run --floating -- bash"
+        leave_broot: false
+    }
+
+    {
         invocation: kbd
         key: ctrl-k
         apply_to: directory
