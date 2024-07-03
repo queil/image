@@ -1,2 +1,2 @@
 privileged: true
-shell: ["zellij", "-d"]
+shell: ["bash", "-c", "zellij --session rooz"]
