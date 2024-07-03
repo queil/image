@@ -42,7 +42,6 @@ eval "$(starship init bash)"
 
 # ENV VARS
 
-export XDG_RUNTIME_DIR=$HOME/.docker/run
 export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
 export CONTAINER_NAME=$(cat /etc/hostname)
 export PATH=$HOME/.local/bin:$PATH
