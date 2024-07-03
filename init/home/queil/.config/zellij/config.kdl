@@ -43,7 +43,6 @@ themes {
 }
 
 theme "spacedust"
-#default_layout "ide"
 mouse_mode false
 default_shell "bash"
 pane_frames true
