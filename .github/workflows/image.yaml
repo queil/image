@@ -184,23 +184,23 @@ jobs:
         
       # ---- RUST ----
 
-      # - name: rust
-        # id: rust
-        # uses: redhat-actions/buildah-build@v2
-        # with:
-          # image: ${{ env.IMAGE_NAME }}
-          # tags: rust
-          # context: .
-          # containerfiles: |
-            # ./images/rust.Containerfile
-# 
-      # - name: Push rust
-        # uses: redhat-actions/push-to-registry@v2
-        # with:
-          # image: ${{ steps.rust.outputs.image }}
-          # tags: ${{ steps.rust.outputs.tags }}
-          # registry: ${{ env.REGISTRY }}
-# 
+      - name: rust
+        id: rust
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: rust
+          context: .
+          containerfiles: |
+            ./images/rust.Containerfile
+
+      - name: Push rust
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.rust.outputs.image }}
+          tags: ${{ steps.rust.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
       # # ---- PYTHON ----
 # 
       # - name: python
