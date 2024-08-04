@@ -9,7 +9,7 @@ RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yu
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    systemd tar unzip bash-completion git git-delta micro jq dnsutils \
+    fish systemd tar unzip bash-completion git git-delta micro jq dnsutils \
     iproute htop which procps-ng openssh-server \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras \
     slirp4netns fuse-overlayfs && \
@@ -87,3 +87,5 @@ RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
 WORKDIR $HOME
+SHELL fish
+
