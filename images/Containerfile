@@ -87,4 +87,3 @@ RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
     code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
 WORKDIR $HOME
-SHELL ["fish"]
