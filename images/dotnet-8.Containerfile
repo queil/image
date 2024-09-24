@@ -10,7 +10,14 @@ ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 RUN echo 'alias drf="dotnet nuget locals --clear http-cache && dotnet restore --use-lock-file --force-evaluate"' >> $HOME/.image.bashrc && \
     echo 'alias dlp="dotnet restore && dotnet list package --outdated"' >> $HOME/.image.bashrc
 
-RUN code-server --install-extension Ionide.Ionide-fsharp
+RUN code-server --install-extension Ionide.Ionide-fsharp && \
+    code-server --install-extension ms-dotnettools.csdevkit && \
+    code-server --install-extension ms-dotnettools.csharp && \
+    code-server --install-extension ms-dotnettools.vscode-dotnet-runtime && \
+    code-server --install-extension ms-mssql.data-workspace-vscode && \
+    code-server --install-extension ms-mssql.mssql && \
+    code-server --install-extension ms-mssql.sql-bindings-vscode && \
+    code-server --install-extension ms-mssql.sql-database-projects-vscode
 
 USER root
 RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
