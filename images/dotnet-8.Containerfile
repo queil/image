@@ -1,8 +1,11 @@
 FROM ghcr.io/queil/image:latest
 
+ARG USER=queil
+ARG HOME=/home/$USER
+
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
-ENV PATH="${PATH}:/home/queil/.dotnet/tools"
+ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
 RUN echo 'alias drf="dotnet nuget locals --clear http-cache && dotnet restore --use-lock-file --force-evaluate"' >> $HOME/.image.bashrc && \
     echo 'alias dlp="dotnet restore && dotnet list package --outdated"' >> $HOME/.image.bashrc
@@ -10,7 +13,12 @@ RUN echo 'alias drf="dotnet nuget locals --clear http-cache && dotnet restore --
 RUN code-server --install-extension Ionide.Ionide-fsharp
 
 USER root
-RUN microdnf install -y --nodocs --setopt install_weak_deps=0 dotnet-sdk-8.0 && microdnf clean all && rm -rf /var/cache/yum
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
+      dotnet-sdk-8.0 \
+      # IronPDF deps
+      glibc-devel nss at-spi2-atk libXcomposite libXrandr mesa-libgbm alsa-lib pango cups-libs libXdamage libxshmfence \
+      && microdnf clean all && rm -rf /var/cache/yum
+
 USER queil
 RUN dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && \

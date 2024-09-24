@@ -8,6 +8,9 @@ RUN microdnf install -y --nodocs --setopt install_weak_deps=0 gcc && \
 
 USER queil
 
+ARG USER=queil
+ARG HOME=/home/$USER
+
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"

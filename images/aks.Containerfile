@@ -31,5 +31,8 @@ RUN curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v${AR
 
 USER queil
 
+ARG USER=queil
+ARG HOME=/home/$USER
+
 RUN echo 'alias k=kubectl' >> $HOME/.image.bashrc && \
     echo 'alias kb="kustomize build"' >> $HOME/.image.bashrc
