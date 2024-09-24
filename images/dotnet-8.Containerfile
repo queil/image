@@ -23,7 +23,7 @@ USER root
 RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
       dotnet-sdk-8.0 \
       # IronPDF deps
-      glibc-devel nss at-spi2-atk libXcomposite libXrandr mesa-libgbm alsa-lib pango cups-libs libXdamage libxshmfence \
+      chromium glibc-devel nss at-spi2-atk libXcomposite libXrandr mesa-libgbm alsa-lib pango cups-libs libXdamage libxshmfence \
       && microdnf clean all && rm -rf /var/cache/yum
 
 USER queil
