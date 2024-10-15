@@ -29,6 +29,10 @@ RUN curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v${AR
     gunzip argo-linux-amd64.gz && \
     chmod +x argo-linux-amd64 && mv ./argo-linux-amd64 /usr/bin/argo
 
+ARG ARGO_CD_VER=2.12.4
+RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/${ARGO_CD_VER}/argocd-linux-amd64 && \
+    chmod +x argocd-linux-amd64 && mv ./argocd-linux-amd64 /usr/bin/argocd
+
 USER queil
 
 ARG USER=queil
