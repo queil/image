@@ -15,7 +15,6 @@ RUN code-server --install-extension Ionide.Ionide-fsharp && \
     code-server --install-extension ms-dotnettools.csharp && \
     code-server --install-extension ms-mssql.data-workspace-vscode && \
     code-server --install-extension ms-mssql.mssql && \
-    code-server --install-extension ms-mssql.sql-bindings-vscode && \
     code-server --install-extension ms-mssql.sql-database-projects-vscode
 
 USER root
