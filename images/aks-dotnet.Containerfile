@@ -3,8 +3,9 @@ FROM ghcr.io/queil/image:latest
 USER root
 
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
+    microdnf install -y dotnet-sdk-8.0 --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
-    microdnf install -y dotnet-sdk-8.0 azure-cli --nodocs --setopt install_weak_deps=0 && \
+    microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all && rm -rf /var/cache/yum && \
     az aks install-cli
 
@@ -25,6 +26,8 @@ RUN dotnet tool install -g fsautocomplete && \
 
 RUN mkdir -p ~/.config/micro/plug/lsp && \
     git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
+
+USER root
 
 ARG KUSTOMIZE_VER=5.5.0
 
