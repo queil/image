@@ -67,6 +67,23 @@ jobs:
           tags: ${{ steps.aks.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
+      - name: aks-dotnet
+        id: aks-dotnet
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: aks-dotnet
+          context: .
+          containerfiles: |
+            ./images/aks-dotnet.Containerfile
+
+      - name: Push aks-dotnet
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.aks-dotnet.outputs.image }}
+          tags: ${{ steps.aks-dotnet.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
       # ---- DEVOPS ----
 
       # - name: devops
@@ -144,25 +161,6 @@ jobs:
           # tags: ${{ steps.cdk.outputs.tags }}
           # registry: ${{ env.REGISTRY }}
 
-      # ---- DOTNET-ALL ----
-
-      # - name: dotnet-all
-        # id: dotnetall
-        # uses: redhat-actions/buildah-build@v2
-        # with:
-          # image: ${{ env.IMAGE_NAME }}
-          # tags: dotnet-all
-          # context: .
-          # containerfiles: |
-            # ./images/dotnet-all.Containerfile
-# 
-      # - name: Push dotnet-all
-        # uses: redhat-actions/push-to-registry@v2
-        # with:
-          # image: ${{ steps.dotnetall.outputs.image }}
-          # tags: ${{ steps.dotnetall.outputs.tags }}
-          # registry: ${{ env.REGISTRY }}
-
       # ---- DOTNET 8 ----
 
       - name: dotnet-8
@@ -174,7 +172,6 @@ jobs:
           context: .
           containerfiles: |
             ./images/dotnet-8.Containerfile
-
 
       - name: Push dotnet-8
         uses: redhat-actions/push-to-registry@v2

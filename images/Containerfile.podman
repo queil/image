@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:39 as base
+FROM registry.fedoraproject.org/fedora-minimal:39
 
 ARG USER=queil
 ARG HOME=/home/$USER

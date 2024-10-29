@@ -1,4 +1,4 @@
-FROM ghcr.io/queil/image:latest as devops
+FROM ghcr.io/queil/image:latest
 
 ARG SOPS_VER=3.7.3
 ARG AWS_VAULT_VER=7.2.0

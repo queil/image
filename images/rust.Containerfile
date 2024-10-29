@@ -1,4 +1,4 @@
-FROM ghcr.io/queil/image:latest as rust
+FROM ghcr.io/queil/image:latest
 
 USER root
 

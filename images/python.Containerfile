@@ -1,4 +1,4 @@
-FROM ghcr.io/queil/image:latest as python
+FROM ghcr.io/queil/image:latest
 
 USER root
 RUN microdnf install -y --nodocs --setopt install_weak_deps=0 poetry && microdnf clean all && rm -rf /var/cache/yum
