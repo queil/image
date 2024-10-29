@@ -8,6 +8,9 @@ RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
     microdnf clean all && rm -rf /var/cache/yum && \
     az aks install-cli
 
+ARG USER=queil
+ARG HOME=/home/$USER
+
 USER queil
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
