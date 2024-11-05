@@ -3,7 +3,7 @@ FROM ghcr.io/queil/image:latest
 USER root
 
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-    microdnf install -y dotnet-sdk-8.0 --nodocs --setopt install_weak_deps=0 && \
+    microdnf install -y dotnet-sdk-8.0 helm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all && rm -rf /var/cache/yum && \
@@ -54,10 +54,12 @@ ARG ARGO_CD_VER=2.12.4
 RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/v${ARGO_CD_VER}/argocd-linux-amd64 && \
     chmod +x argocd-linux-amd64 && mv ./argocd-linux-amd64 /usr/bin/argocd
 
+RUN curl -fsSL https://get.pulumi.com | sh
+
 USER queil
 
-ARG USER=queil
-ARG HOME=/home/$USER
+ENV USER=queil
+ENV HOME=/home/$USER
 
 RUN echo 'alias k=kubectl' >> $HOME/.image.bashrc && \
     echo 'alias kb="kustomize build"' >> $HOME/.image.bashrc
