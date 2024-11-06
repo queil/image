@@ -24,9 +24,23 @@ mkdir -p $mod_out
 git -C "$src_root" archive main | tar -x -C "$copy_root"
 
 echo "Building ref: $ref_dir -> $ref_out"
+
 kustomize build "$ref_dir" -o $ref_out
+
+if [ $? -ne 0 ]; then
+    read -p "Kustomize failed. Press enter"
+    exit 1
+fi
+
 echo "Building mod: $mod_dir -> $mod_out"
 kustomize build "$mod_dir" -o $mod_out
+
+if [ $? -ne 0 ]; then
+    read -p "Kustomize failed. Press enter"
+    exit 1
+fi
+
 echo "delta"
 cd $ref_dir
-delta --relative-paths .ref .mod
+
+delta --relative-paths .ref .mod --paging=always
