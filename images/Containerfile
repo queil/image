@@ -52,9 +52,9 @@ RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v0.40.1/zel
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij.tar.gz
 
-RUN curl -sSL https://github.com/Canop/broot/releases/download/v1.44.2/broot-x86_64-linux-v1.44.2.zip -o /tmp/broot.zip && \
-    unzip /tmp/broot.zip -d /tmp && \
-    mv /tmp/broot /usr/bin && chmod +x /usr/bin/broot && \
+RUN curl -sSL https://github.com/Canop/broot/releases/download/v1.44.2/broot_1.44.2.zip -o /tmp/broot.zip && \
+    unzip /tmp/broot.zip -d /tmp/broot && \
+    mv /tmp/broot/x86_64-linux/broot /usr/bin && chmod +x /usr/bin/broot && \
     rm /tmp/broot.zip
 
 USER $USER
