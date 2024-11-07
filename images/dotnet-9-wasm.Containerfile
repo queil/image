@@ -18,7 +18,7 @@ RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
 
 ARG WASMTIME_VER=26.0.1
 RUN curl -sSL https://github.com/bytecodealliance/wasmtime/releases/download/v${WASMTIME_VER}/wasmtime-v${WASMTIME_VER}-x86_64-linux.tar.xz -o /tmp/wasmtime.tar.xz && \
-    tar -xvf /tmp/wasmtime.tar.xz -C /tmp && \
+    tar -xvf --no-same-owner /tmp/wasmtime.tar.xz -C /tmp && \
     mv /tmp/wasmtime-v${WASMTIME_VER}-x86_64-linux/wasmtime /usr/bin && chmod +x /usr/bin/wasmtime && \
     rm /tmp/wasmtime.tar.xz
  
