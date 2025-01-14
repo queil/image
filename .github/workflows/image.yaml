@@ -84,24 +84,6 @@ jobs:
           tags: ${{ steps.aks-dotnet.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
-      - name: dotnet-9-wasm
-        id: dotnet-9-wasm
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: dotnet-9-wasm
-          context: .
-          containerfiles: |
-            ./images/dotnet-9-wasm.Containerfile
-
-      - name: Push dotnet-9-wasm
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.dotnet-9-wasm.outputs.image }}
-          tags: ${{ steps.dotnet-9-wasm.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
-
-
       # ---- DEVOPS ----
 
       # - name: devops
