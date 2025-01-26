@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-minimal:40
+FROM docker.io/fedora:41
 
 ARG USER=queil
 ARG HOME=/home/$USER
@@ -47,12 +47,12 @@ WORKDIR $HOME
 
 USER root
 
-RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v0.40.1/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
+RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v0.41.2/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
     tar -zxvf /tmp/zellij.tar.gz -C /tmp && \
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij.tar.gz
 
-RUN curl -sSL https://github.com/Canop/broot/releases/download/v1.44.2/broot_1.44.2.zip -o /tmp/broot.zip && \
+RUN curl -sSL https://github.com/Canop/broot/releases/download/v1.44.6/broot_1.44.6.zip -o /tmp/broot.zip && \
     unzip /tmp/broot.zip -d /tmp/broot && \
     mv /tmp/broot/x86_64-linux/broot /usr/bin && chmod +x /usr/bin/broot && \
     rm /tmp/broot.zip
@@ -81,9 +81,5 @@ ENV PATH="$HOME/.local/bin:${PATH}"
 
 # this is needed for tools like: dockerd-rootless.sh or zellij
 ENV XDG_RUNTIME_DIR="/tmp"
-
-# POST-INIT
-RUN code-server --install-extension streetsidesoftware.code-spell-checker && \
-    code-server --install-extension luxcium.pop-n-lock-theme-vscode
 
 WORKDIR $HOME
