@@ -24,7 +24,8 @@ content_search_max_file_size: 10MB
 
 # update_work_dir: false
 
-enable_kitty_keyboard: true
+# when enabled it breaks when running in zellij
+enable_kitty_keyboard: false
 
 imports: [
     verbs.hjson
