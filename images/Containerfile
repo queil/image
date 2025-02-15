@@ -9,7 +9,7 @@ RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yu
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    fish systemd tar unzip bash-completion git git-delta micro jq dnsutils \
+    nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
     iproute htop which procps-ng openssh-server \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras \
     slirp4netns fuse-overlayfs && \
@@ -47,12 +47,14 @@ WORKDIR $HOME
 
 USER root
 
-RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v0.41.2/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
+ARG ZELLIJ_VER=0.41.2
+RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v$ZELLIJ_VER/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
     tar -zxvf /tmp/zellij.tar.gz -C /tmp && \
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij.tar.gz
 
-RUN curl -sSL https://github.com/Canop/broot/releases/download/v1.44.6/broot_1.44.6.zip -o /tmp/broot.zip && \
+ARG BROOT_VER=1.44.7
+RUN curl -sSL https://github.com/Canop/broot/releases/download/v$BROOT_VER/broot_$BROOT_VER.zip -o /tmp/broot.zip && \
     unzip /tmp/broot.zip -d /tmp/broot && \
     mv /tmp/broot/x86_64-linux/broot /usr/bin && chmod +x /usr/bin/broot && \
     rm /tmp/broot.zip
