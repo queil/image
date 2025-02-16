@@ -105,22 +105,22 @@ jobs:
 
       # ---- HUGO ----
 
-      # - name: hugo
-        # id: hugo
-        # uses: redhat-actions/buildah-build@v2
-        # with:
-          # image: ${{ env.IMAGE_NAME }}
-          # tags: hugo
-          # context: .
-          # containerfiles: |
-            # ./images/hugo.Containerfile
-# 
-      # - name: Push hugo
-        # uses: redhat-actions/push-to-registry@v2
-        # with:
-          # image: ${{ steps.hugo.outputs.image }}
-          # tags: ${{ steps.hugo.outputs.tags }}
-          # registry: ${{ env.REGISTRY }}
+      - name: hugo
+        id: hugo
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: hugo
+          context: .
+          containerfiles: |
+            ./images/hugo.Containerfile
+
+      - name: Push hugo
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.hugo.outputs.image }}
+          tags: ${{ steps.hugo.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
 
       # ---- MKDOCS ----
 
