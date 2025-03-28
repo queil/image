@@ -47,13 +47,13 @@ WORKDIR $HOME
 
 USER root
 
-ARG ZELLIJ_VER=0.41.2
+ARG ZELLIJ_VER=0.42.1
 RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v$ZELLIJ_VER/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
     tar -zxvf /tmp/zellij.tar.gz -C /tmp && \
     mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
     rm /tmp/zellij.tar.gz
 
-ARG BROOT_VER=1.44.7
+ARG BROOT_VER=1.45.1
 RUN curl -sSL https://github.com/Canop/broot/releases/download/v$BROOT_VER/broot_$BROOT_VER.zip -o /tmp/broot.zip && \
     unzip /tmp/broot.zip -d /tmp/broot && \
     mv /tmp/broot/x86_64-linux/broot /usr/bin && chmod +x /usr/bin/broot && \

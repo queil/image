@@ -67,22 +67,7 @@ jobs:
           # tags: ${{ steps.aks.outputs.tags }}
           # registry: ${{ env.REGISTRY }}
 
-      - name: aks-dotnet
-        id: aks-dotnet
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: aks-dotnet
-          context: .
-          containerfiles: |
-            ./images/aks-dotnet.Containerfile
 
-      - name: Push aks-dotnet
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.aks-dotnet.outputs.image }}
-          tags: ${{ steps.aks-dotnet.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
 
       # ---- DEVOPS ----
 
@@ -180,6 +165,23 @@ jobs:
           tags: ${{ steps.dotnet8.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
+
+      - name: aks-dotnet
+        id: aks-dotnet
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: aks-dotnet
+          context: .
+          containerfiles: |
+            ./images/aks-dotnet.Containerfile
+
+      - name: Push aks-dotnet
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.aks-dotnet.outputs.image }}
+          tags: ${{ steps.aks-dotnet.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
       # ---- RUST ----
 
       # - name: rust
