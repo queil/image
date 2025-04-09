@@ -2,8 +2,11 @@ name: Build image
 
 on:
   workflow_dispatch:
+  schedule:
+  - cron: '30 2 * * *'
   push:
-    branches: [ "main" ]
+    branches:
+    - main
 
 jobs:
   build:
@@ -20,33 +23,6 @@ jobs:
       - name: "Fix no space left on device"
         run: rm -rf /opt/hostedtoolcache
 
-      # -- first build & push base so it can be reused downstream
-     
-      - name: base
-        id: base
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: latest ${{ github.sha }}
-          context: .
-          containerfiles: |
-            ./images/Containerfile
-
-      - name: Log in to the GitHub Container registry
-        uses: redhat-actions/podman-login@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push base
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.base.outputs.image }}
-          tags: ${{ steps.base.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
-
-      # -- build the rest of the variants
 
       # ---- AKS ----
       
