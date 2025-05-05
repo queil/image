@@ -1,2 +1,5 @@
 privileged: true
-shell: ["zellij --session rooz || zellij attach rooz"]
+shell:
+- sh
+- -c
+- zellij --session rooz || zellij attach rooz
