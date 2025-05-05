@@ -22,13 +22,6 @@ RUN adduser $USER && chown $USER -R $HOME && \
 
 RUN chmod 0755 /usr/bin/newuidmap && chmod 0755 /usr/bin/newgidmap
 
-RUN mkdir -p /home/$USER/.local/share/containers && \
-    chown $USER:$USER -R /home/$USER
-# Note VOLUME options must always happen after the chown call above
-# RUN commands can not modify existing volumes
-
-VOLUME /home/$USER/.local/share/containers
-
 RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
     chmod +x ./install.sh && ./install.sh --yes && rm ./install.sh
 
