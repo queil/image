@@ -23,6 +23,12 @@ jobs:
       - name: "Fix no space left on device"
         run: rm -rf /opt/hostedtoolcache
 
+      - name: Log in to the GitHub Container registry
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       # ---- AKS ----
       
