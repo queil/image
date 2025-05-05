@@ -9,7 +9,7 @@ RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yu
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
+    man nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
     iproute htop which procps-ng openssh-server \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras \
     slirp4netns fuse-overlayfs iptables-nft && update-alternatives --set iptables /usr/sbin/iptables-nft && \
@@ -22,46 +22,43 @@ RUN adduser $USER && chown $USER -R $HOME && \
 
 RUN chmod 0755 /usr/bin/newuidmap && chmod 0755 /usr/bin/newgidmap
 
-RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
-    chmod +x ./install.sh && ./install.sh --yes && rm ./install.sh
-
-# User setup
-
 WORKDIR $HOME
+USER $USER
 
-USER root
+RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
+    chmod +x ./install.sh && mkdir -p ./.local/bin && ./install.sh --yes --bin-dir=./.local/bin && rm ./install.sh
 
 ARG ZELLIJ_VER=0.42.1
 RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v$ZELLIJ_VER/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
     tar -zxvf /tmp/zellij.tar.gz -C /tmp && \
-    mv /tmp/zellij /usr/bin && chmod +x /usr/bin/zellij && \
+    mv /tmp/zellij ./.local/bin && chmod +x ./.local/bin/zellij && \
     rm /tmp/zellij.tar.gz
 
 ARG BROOT_VER=1.45.1
 RUN curl -sSL https://github.com/Canop/broot/releases/download/v$BROOT_VER/broot_$BROOT_VER.zip -o /tmp/broot.zip && \
     unzip /tmp/broot.zip -d /tmp/broot && \
-    mv /tmp/broot/x86_64-linux/broot /usr/bin && chmod +x /usr/bin/broot && \
+    mv /tmp/broot/x86_64-linux/broot ./.local/bin && chmod +x ./.local/bin/broot && \
     rm /tmp/broot.zip
-
-USER $USER
 
 ARG INIT_REPO=https://github.com/queil/image
 ARG INIT_BRANCH=main
-ARG INIT_DIR=/init
-
-WORKDIR $INIT_DIR
 
 ADD --chown=$USER https://api.github.com/repos/queil/image/git/refs/heads/$INIT_BRANCH $HOME/.git-ref
 
-USER root
-RUN chown $USER $INIT_DIR
-USER $USER
+# USER root
+# RUN chown $USER $INIT_DIR
+# USER $USER
+
+WORKDIR $HOME/.upd
 
 RUN git clone --no-checkout $INIT_REPO . && \
     git sparse-checkout init --cone && \
-    git sparse-checkout set ".$INIT_DIR" && \
-    git checkout $INIT_BRANCH && \
-    ".$INIT_DIR/home/$USER/update.sh"
+    git sparse-checkout set ./init && \
+    git checkout $INIT_BRANCH
+
+WORKDIR $HOME
+
+RUN "./.upd/init/home/$USER/update.sh"
 
 ENV PATH="$HOME/.local/bin:${PATH}" 
 
