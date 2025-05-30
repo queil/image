@@ -35,6 +35,7 @@ alias cb='git checkout -b'
 alias cm='git commit -m'
 alias pu='git push -u origin "$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"'
 alias pl='git pull'
+alias bo="br --conf ~/.config/broot/select.hjson"
 alias uuid=uuidgen
 alias nano=micro
 
