@@ -49,6 +49,7 @@ export PATH=$HOME/.local/bin:$PATH
 export COLORTERM=truecolor
 export MICRO_TRUECOLOR=1
 export EDITOR=micro
+export GIT_PAGER="cat"
 
 # SET WINDOW TITLE
 
