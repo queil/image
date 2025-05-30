@@ -9,7 +9,7 @@ RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yu
 
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    man nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
+    man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
     iproute htop which procps-ng openssh-server \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras \
     slirp4netns fuse-overlayfs iptables-nft && update-alternatives --set iptables /usr/sbin/iptables-nft && \
