@@ -5,3 +5,6 @@ style = '#999999'
 
 [container]
 disabled = true
+
+[kubernetes]
+disabled = false
