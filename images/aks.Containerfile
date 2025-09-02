@@ -33,6 +33,12 @@ ARG ARGO_CD_VER=2.12.4
 RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/v${ARGO_CD_VER}/argocd-linux-amd64 && \
     chmod +x argocd-linux-amd64 && mv ./argocd-linux-amd64 /usr/bin/argocd
 
+ARG STERN_VER=1.32.0
+RUN curl -sSL -o /tmp/stern.tar.gz https://github.com/stern/stern/releases/download/v${STERN_VER}/stern_${STERN_VER}_linux_amd64.tar.gz && \
+    tar -zxvf /tmp/stern.tar.gz -C /tmp && \
+    mv /tmp/stern /usr/bin && chmod +x /usr/bin/stern && \
+    rm /tmp/stern.tar.gz
+
 USER queil
 
 ARG USER=queil
