@@ -10,6 +10,8 @@ sidecars:
     init: false
     privileged: true
     mount_work: true
+    mounts:
+    - /var/lib/docker/
     args:
     - "--tls=false"
     - "--host=tcp://0.0.0.0:2375"

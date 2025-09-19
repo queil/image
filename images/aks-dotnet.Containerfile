@@ -1,21 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-
-RUN dotnet tool install --global fsy --version 0.20.0-alpha.2 && \
-    dotnet tool install -g fsautocomplete && \
-    dotnet tool install -g fantomas
-
 FROM ghcr.io/queil/image:latest
 
 USER root
 
-COPY --from=build /usr/share/dotnet/shared/Microsoft.NETCore.App /usr/share/dotnet/shared/Microsoft.NETCore.App
-COPY --from=build /usr/share/dotnet/dotnet /usr/share/dotnet/dotnet
-COPY --from=build /usr/share/dotnet/host /usr/share/dotnet/host
-RUN ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
-
-
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-    microdnf install -y icu helm --nodocs --setopt install_weak_deps=0 && \
+    microdnf install -y dotnet-sdk-9.0 helm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all && rm -rf /var/cache/yum && \
@@ -26,17 +14,16 @@ ARG HOME=/home/$USER
 
 USER queil
 
-COPY --from=build /root/.dotnet/tools/ /opt/bin/dotnet-tools
-
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
-ENV DOTNET_ROOT=/usr/share/dotnet
-ENV PATH="${PATH}:${HOME}/.dotnet/tools:${DOTNET_ROOT}:/opt/bin/dotnet-tools"
+ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
 RUN code-server --install-extension Ionide.Ionide-fsharp && \
     code-server --install-extension ms-azuretools.vscode-bicep
 
-RUN  fsy install-fsx-extensions
+RUN dotnet tool install --global fsy --version 0.20.0-alpha.2 && \
+    dotnet tool install -g fsautocomplete && \
+    dotnet tool install -g fantomas && fsy install-fsx-extensions
 
 RUN mkdir -p ~/.config/micro/plug/lsp && \
     git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
