@@ -1,5 +1,18 @@
-privileged: true
 shell:
 - sh
 - -c
 - zellij --session rooz || zellij attach rooz
+env:
+  DOCKER_HOST: "tpc://dkr:2375"
+sidecars:
+  dkr:
+    image: docker.io/docker:28-dind-rootless
+    init: false
+    privileged: true
+    mount_work: true
+    args:
+    - "--tls=false"
+    - "--host=tcp://0.0.0.0:2375"
+    env:
+      DOCKER_TLS_CERTDIR: ''
+      DOCKER_TLS_VERIFY: ''
