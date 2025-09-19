@@ -3,7 +3,7 @@ shell:
 - -c
 - zellij --session rooz || zellij attach rooz
 env:
-  DOCKER_HOST: "tpc://dkr:2375"
+  DOCKER_HOST: "tcp://dkr:2375"
 sidecars:
   dkr:
     image: docker.io/docker:28-dind-rootless
