@@ -1,0 +1,70 @@
+FROM docker.io/fedora:41
+
+ARG USER=queil
+ARG HOME=/home/$USER
+
+# Software
+
+RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo
+
+RUN microdnf update -y && \
+    microdnf install -y --nodocs --setopt install_weak_deps=0 \
+    man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
+    iproute htop which procps-ng openssh-server \
+    docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras \
+    slirp4netns fuse-overlayfs iptables-nft && update-alternatives --set iptables /usr/sbin/iptables-nft && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    rpm --setcaps shadow-utils 2>/dev/null
+
+RUN adduser $USER && chown $USER -R $HOME && \
+    echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subuid; \
+    echo -e "$USER:1:999\n$USER:1001:64535" > /etc/subgid;
+
+RUN chmod 0755 /usr/bin/newuidmap && chmod 0755 /usr/bin/newgidmap
+
+RUN curl -sSL https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+
+WORKDIR $HOME
+USER $USER
+
+RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
+    chmod +x ./install.sh && mkdir -p ./.local/bin && ./install.sh --yes --bin-dir=./.local/bin && rm ./install.sh
+
+ARG ZELLIJ_VER=0.43.1
+RUN curl -sSL https://github.com/zellij-org/zellij/releases/download/v$ZELLIJ_VER/zellij-no-web-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
+    tar -zxvf /tmp/zellij.tar.gz -C /tmp && \
+    mv /tmp/zellij ./.local/bin && chmod +x ./.local/bin/zellij && \
+    rm /tmp/zellij.tar.gz
+
+ARG BROOT_VER=1.47.0
+RUN curl -sSL https://github.com/Canop/broot/releases/download/v$BROOT_VER/broot_$BROOT_VER.zip -o /tmp/broot.zip && \
+    unzip /tmp/broot.zip -d /tmp/broot && \
+    mv /tmp/broot/x86_64-linux/broot ./.local/bin && chmod +x ./.local/bin/broot && \
+    rm /tmp/broot.zip
+
+ARG INIT_REPO=https://github.com/queil/image
+ARG INIT_BRANCH=main
+
+ADD --chown=$USER https://api.github.com/repos/queil/image/git/refs/heads/$INIT_BRANCH $HOME/.git-ref
+
+# USER root
+# RUN chown $USER $INIT_DIR
+# USER $USER
+
+WORKDIR $HOME/.upd
+
+RUN git clone --no-checkout $INIT_REPO . && \
+    git sparse-checkout init --cone && \
+    git sparse-checkout set ./init && \
+    git checkout $INIT_BRANCH
+
+WORKDIR $HOME
+
+RUN "./.upd/init/home/$USER/update.sh"
+
+ENV PATH="$HOME/.local/bin:${PATH}" 
+
+# this is needed for tools like: dockerd-rootless.sh or zellij
+ENV XDG_RUNTIME_DIR="/tmp"
+
+WORKDIR $HOME
