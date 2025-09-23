@@ -3,10 +3,12 @@ FROM docker.io/fedora:42
 ARG USER=queil
 ARG HOME=/home/$USER
 
-RUN microdnf update -y && \
+RUN microdnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo && \
+    microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
     man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
     iproute htop which procps-ng tree && \
+    docker-ce-cli docker-compose-plugin && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     adduser $USER && chown $USER -R $HOME
 
