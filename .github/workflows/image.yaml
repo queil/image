@@ -162,20 +162,20 @@ jobs:
           # registry: ${{ env.REGISTRY }}
 
       # # ---- PYTHON ----
-# 
-      # - name: python
-        # id: python
-        # uses: redhat-actions/buildah-build@v2
-        # with:
-          # image: ${{ env.IMAGE_NAME }}
-          # tags: python
-          # context: .
-          # containerfiles: |
-            # ./images/python.Containerfile
-# 
-      # - name: Push python
-        # uses: redhat-actions/push-to-registry@v2
-        # with:
-          # image: ${{ steps.python.outputs.image }}
-          # tags: ${{ steps.python.outputs.tags }}
-          # registry: ${{ env.REGISTRY }}
+
+      - name: python
+        id: python
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: python
+          context: .
+          containerfiles: |
+            ./images/python.Containerfile
+
+      - name: Push python
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.python.outputs.image }}
+          tags: ${{ steps.python.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
