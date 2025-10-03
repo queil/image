@@ -9,7 +9,7 @@
     "clipboard": "terminal",
     "colorscheme": "material-tc",
     "diffgutter": true,
-    "lsp.server": "fsharp=fsautocomplete --adaptive-lsp-server-enabled --project-graph-enabled={\"fsiExtraParameters\":[\"--compilertool:/home/queil/.fsharp/fsx-extensions/.fsch\"]}",
+    "lsp.server": "bicep=bicep-lsp,fsharp=fsautocomplete --adaptive-lsp-server-enabled --project-graph-enabled={\"fsiExtraParameters\":[\"--compilertool:/home/queil/.fsharp/fsx-extensions/.fsch\"]}",
     "mkparents": true,
     "tabstospaces": true
 }
