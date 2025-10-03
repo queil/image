@@ -3,20 +3,26 @@ disabled = true
 
 [kubernetes]
 disabled = false
-style = 'green bold'
+style = 'green'
+
+[git_branch]
+style = "purple"
 
 [azure]
 disabled = false
 format = 'on [$symbol($subscription)]($style) '
 symbol = '☁️ '
-style = 'blue bold'
+style = 'blue'
 
 [env_var.AZURE_RG]
 variable = "AZURE_DEFAULTS_GROUP"
 format = "[\\($env_value\\)]($style) "
-style = "cyan bold"
+style = "cyan"
 
 [env_var.ROOZ]
 variable = "ROOZ_META_WORKSPACE"
 format = '[⬢ $env_value]($style) '
 style = '#999999'
+
+[directory]
+style = "#999999"
