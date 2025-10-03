@@ -1,10 +1,22 @@
-[env_var]
-variable = "ROOZ_META_WORKSPACE"
-format = '[⬢ $env_value]($style) '
-style = '#999999'
-
 [container]
 disabled = true
 
 [kubernetes]
 disabled = false
+style = 'green bold'
+
+[azure]
+disabled = false
+format = 'on [$symbol($subscription)]($style) '
+symbol = '☁️ '
+style = 'blue bold'
+
+[env_var.AZURE_RG]
+variable = "AZURE_DEFAULTS_GROUP"
+format = "[\\($env_value\\)]($style) "
+style = "cyan bold"
+
+[env_var.ROOZ]
+variable = "ROOZ_META_WORKSPACE"
+format = '[⬢ $env_value]($style) '
+style = '#999999'
