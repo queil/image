@@ -106,21 +106,21 @@ jobs:
           registry: ${{ env.REGISTRY }}
 
 
-      - name: aks-dotnet
-        id: aks-dotnet
+      - name: aks
+        id: aks
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: aks-dotnet
+          tags: aks
           context: .
           containerfiles: |
-            ./images/aks-dotnet.Containerfile
+            ./images/aks.Containerfile
 
-      - name: Push aks-dotnet
+      - name: Push aks
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.aks-dotnet.outputs.image }}
-          tags: ${{ steps.aks-dotnet.outputs.tags }}
+          image: ${{ steps.aks.outputs.image }}
+          tags: ${{ steps.aks.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
       # k3s

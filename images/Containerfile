@@ -6,7 +6,7 @@ ARG HOME=/home/$USER
 RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo && \
     microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils \
+    man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils tree gh \
     iproute htop which procps-ng tree \
     docker-ce-cli docker-compose-plugin docker-buildx-plugin && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -25,6 +25,7 @@ ARG ZELLIJ_VER=0.43.1
 ARG BROOT_VER=1.47.0
 ARG JJ_VER=0.33.0
 ARG ROOZ_VER=0.130.0
+ARG JIRA_CLI_VER=1.7.0
 
 RUN curl -sSL "https://github.com/zyedidia/eget/releases/download/v${EGET_VER}/eget-${EGET_VER}-linux_amd64.tar.gz" -o /tmp/eget.tar.gz && \
     tar -zxvf /tmp/eget.tar.gz -C /tmp && mv "/tmp/eget-${EGET_VER}-linux_amd64/eget" ./.local/bin/ && chmod +x ./.local/bin/eget && rm /tmp/eget.tar.gz && \
@@ -32,7 +33,8 @@ RUN curl -sSL "https://github.com/zyedidia/eget/releases/download/v${EGET_VER}/e
     eget zellij-org/zellij --asset=zellij-no-web --tag "v${ZELLIJ_VER}" && \
     eget Canop/broot --file=x86_64-unknown-linux-gnu/broot --tag "v${BROOT_VER}" && \
     eget jj-vcs/jj --tag "v${JJ_VER}" && \
-    eget queil/rooz --tag "v${ROOZ_VER}"
+    eget queil/rooz --tag "v${ROOZ_VER}" && \
+    eget ankitpokhrel/jira-cli --tag "v${JIRA_CLI_VER}"
 
 ARG INIT_REPO=https://github.com/queil/image
 ARG INIT_BRANCH=main

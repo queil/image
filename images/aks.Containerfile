@@ -2,47 +2,50 @@ FROM ghcr.io/queil/image:latest
 
 USER root
 
+# bicep language server requries dotnet 8.0
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
+    microdnf install -y dotnet-sdk-8.0 helm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all && rm -rf /var/cache/yum && \
     az aks install-cli
 
-ARG KUSTOMIZE_VER=5.5.0
-
-RUN curl -sSL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VER}/kustomize_v${KUSTOMIZE_VER}_linux_amd64.tar.gz" -o /tmp/kustomize.tar.gz && \
-    tar -zxvf /tmp/kustomize.tar.gz -C /tmp && \
-    mv /tmp/kustomize /usr/bin && chmod +x /usr/bin/kustomize && \
-    rm /tmp/kustomize.tar.gz
-
-
-ARG KUBESEAL_VER=0.26.1
-
-RUN curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VER}/kubeseal-${KUBESEAL_VER}-linux-amd64.tar.gz" -o /tmp/kubeseal.tar.gz && \
-    tar -zxvf /tmp/kubeseal.tar.gz -C /tmp && \
-    mv /tmp/kubeseal /usr/bin && chmod +x /usr/bin/kubeseal && \
-    rm /tmp/kubeseal.tar.gz
-
-ARG ARGO_WF_VER=3.5.6
-
-RUN curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v${ARGO_WF_VER}/argo-linux-amd64.gz && \
-    gunzip argo-linux-amd64.gz && \
-    chmod +x argo-linux-amd64 && mv ./argo-linux-amd64 /usr/bin/argo
-
-ARG ARGO_CD_VER=2.12.4
-RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/download/v${ARGO_CD_VER}/argocd-linux-amd64 && \
-    chmod +x argocd-linux-amd64 && mv ./argocd-linux-amd64 /usr/bin/argocd
-
-ARG STERN_VER=1.32.0
-RUN curl -sSL -o /tmp/stern.tar.gz https://github.com/stern/stern/releases/download/v${STERN_VER}/stern_${STERN_VER}_linux_amd64.tar.gz && \
-    tar -zxvf /tmp/stern.tar.gz -C /tmp && \
-    mv /tmp/stern /usr/bin && chmod +x /usr/bin/stern && \
-    rm /tmp/stern.tar.gz
+ARG USER=queil
+ARG HOME=/home/$USER
 
 USER queil
 
-ARG USER=queil
-ARG HOME=/home/$USER
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
+ENV DOTNET_NOLOGO=true
+ENV PATH="${PATH}:${HOME}/.dotnet/tools"
+
+ARG BICEP_LSP_VER=0.38.5
+ARG BICEP_WRAPPER_PATH=$HOME/.local/bin/bicep-lsp
+
+RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-fsharp && \
+    code-server --accept-server-license-terms --install-extension "ms-azuretools.vscode-bicep@${BICEP_LSP_VER}" && \
+    echo '#!/bin/bash' > $BICEP_WRAPPER_PATH && \
+    echo "exec dotnet ${HOME}/.vscode-server/extensions/ms-azuretools.vscode-bicep-${BICEP_LSP_VER}/bicepLanguageServer/Bicep.LangServer.dll \"$@\"" >> $BICEP_WRAPPER_PATH && \
+    chmod +x $BICEP_WRAPPER_PATH
+
+RUN dotnet tool install --global fsy --version 0.20.0 && \
+    dotnet tool install -g fsautocomplete && \
+    dotnet tool install -g fantomas && fsy install-fsx-extensions
+
+RUN mkdir -p ~/.config/micro/plug/lsp && \
+    git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
+
+ARG KUSTOMIZE_VER=5.7.1
+ARG KUBESEAL_VER=0.32.2
+ARG ARGO_WF_VER=3.7.2
+ARG ARGO_CD_VER=3.1.6
+ARG STERN_VER=1.33.0
+
+RUN eget kubernetes-sigs/kustomize  --tag="v${KUSTOMIZE_VER}" && \
+    eget bitnami-labs/sealed-secrets --asset=kubeseal --asset=^.sig --file=kubeseal --tag="v${KUBESEAL_VER}" && \
+    eget argoproj/argo-workflows --tag="${ARGO_WF_VER}" && \
+    eget argoproj/argo-cd --tag="${ARGO_CD_VER}" && \
+    eget stern/stern --tag="${STERN_VER}"
 
 RUN echo 'alias k=kubectl' >> $HOME/.image.bashrc && \
     echo 'alias kb="kustomize build"' >> $HOME/.image.bashrc
