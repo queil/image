@@ -7,7 +7,7 @@ RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yu
     microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
     man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils tree gh \
-    iproute htop which procps-ng tree \
+    iproute htop which procps-ng tree fzf tldr \
     docker-ce-cli docker-compose-plugin docker-buildx-plugin && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     adduser $USER && chown $USER -R $HOME
