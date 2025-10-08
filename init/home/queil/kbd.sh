@@ -21,7 +21,10 @@ rm $copy_root -rf
 mkdir -p $ref_out
 mkdir -p $mod_out
 
-git -C "$src_root" archive main | tar -x -C "$copy_root"
+base=$(git log --format='%H %D' | grep -v "HEAD" | awk 'NF>1 {print $1; exit}')
+echo "Comparing against: $base"
+
+git -C "$src_root" archive "$base" | tar -x -C "$copy_root"
 
 echo "Building ref: $ref_dir -> $ref_out"
 
