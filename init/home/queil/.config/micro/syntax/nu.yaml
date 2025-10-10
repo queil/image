@@ -1,0 +1,165 @@
+filetype: nu
+
+detect:
+    filename: "\\.nu$"
+    header: "^#!.*\\bnu\\b"
+
+rules:
+    # Shebang
+    - preproc: "^#!.*$"
+    
+    # Comments
+    - comment:
+        start: "#"
+        end: "$"
+        rules: []
+
+    # Interpolated strings with $"" (double quoted, supports escapes)
+    - constant.string:
+        start: "\\$\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\."
+            - identifier.var: "\\$(nu|in|env)\\b"
+            - identifier.var: "\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)?"
+            - identifier:
+                start: "\\("
+                end: "\\)"
+                rules:
+                    - identifier.var: "\\$(nu|in|env)\\b"
+                    - identifier.var: "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+                    - constant.number: "\\b[0-9][0-9_]*(\\.[0-9_]+)?([eE][+-]?[0-9]+)?\\b"
+                    - constant.bool: "\\b(true|false)\\b"
+                    - symbol.operator: "[+\\-*/%<>=!|&]"
+                    - symbol: "[\\[\\]{}().,:]"
+
+    # Interpolated strings with $'' (single quoted, no escapes)
+    - constant.string:
+        start: "\\$'"
+        end: "'"
+        rules:
+            - identifier.var: "\\$(nu|in|env)\\b"
+            - identifier.var: "\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)?"
+            - identifier:
+                start: "\\("
+                end: "\\)"
+                rules:
+                    - identifier.var: "\\$(nu|in|env)\\b"
+                    - identifier.var: "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+                    - constant.number: "\\b[0-9][0-9_]*(\\.[0-9_]+)?([eE][+-]?[0-9]+)?\\b"
+                    - constant.bool: "\\b(true|false)\\b"
+                    - symbol.operator: "[+\\-*/%<>=!|&]"
+                    - symbol: "[\\[\\]{}().,:]"
+
+    # Regular strings
+    - constant.string:
+        start: "\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\."
+
+    - constant.string:
+        start: "'"
+        end: "'"
+        rules: []
+
+    - constant.string:
+        start: "`"
+        end: "`"
+        rules: []
+
+    # Raw strings (simplified - matches r#"..."#, r##"..."##, etc)
+    - constant.string: "r#+'[^']*'#+"
+    - constant.string: 'r#+"[^"]*"#+'
+
+    # Keywords - control flow
+    - statement: "\\b(if|else|match|for|loop|while|in)\\b"
+    
+    # Keywords - declarations
+    - type.keyword: "\\b(def|alias|extern|module|export-env|export|use)\\b"
+    
+    # Keywords - variables
+    - type.keyword: "\\b(let|mut|const)\\b"
+    
+    # Keywords - error handling
+    - statement: "\\b(try|catch)\\b"
+
+    # Special values
+    - constant.bool: "\\b(true|false)\\b"
+    - constant: "\\b(null|nothing)\\b"
+    - constant.number: "\\b([iI][nN][fF]([iI][nN][iI][tT][yY])?|-[iI][nN][fF]([iI][nN][iI][tT][yY])?|[nN][aA][nN])\\b"
+
+    # Built-in variables
+    - identifier.var: "\\$(nu|in|env)\\b"
+    
+    # Variables with cell paths
+    - identifier.var: "\\$[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)+"
+
+    # Variables
+    - identifier.var: "\\$[a-zA-Z_][a-zA-Z0-9_]*"
+
+    # Dates (ISO format)
+    - constant.number: "\\b[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?([Zz]|[\\+-][0-9]{2}:?[0-9]{2})?)?\\b"
+
+    # Durations (number + unit)
+    - constant.number: "\\b[0-9][0-9_]*(\\.[0-9_]+)?(ns|µs|us|ms|sec|min|hr|day|wk)\\b"
+
+    # File sizes (number + unit)
+    - constant.number: "\\b[0-9][0-9_]*(\\.[0-9_]+)?(b|B|[kmgtpe]i?[bB]|[KMGTPE]i?[bB]|[kKmMgGtTpPeE][iI][bB])\\b"
+
+    # Numbers - hex, binary, octal
+    - constant.number: "\\b0x[0-9a-fA-F_]+\\b"
+    - constant.number: "\\b0b[01_]+\\b"
+    - constant.number: "\\b0o[0-7_]+\\b"
+
+    # Numbers - floats and integers
+    - constant.number: "\\b[+-]?[0-9][0-9_]*(\\.[0-9_]+)?([eE][+-]?[0-9]+)?\\b"
+    - constant.number: "\\b[+-]?\\.[0-9][0-9_]*([eE][+-]?[0-9]+)?\\b"
+
+    # Ranges
+    - symbol.operator: "(\\.\\.<|\\.\\.|\\.\\.=)"
+
+    # Long flags
+    - identifier.macro: "--[a-zA-Z][a-zA-Z0-9_?-]*"
+    
+    # Short flags
+    - identifier.macro: "-[a-zA-Z]+"
+
+    # Logical operators
+    - symbol.operator: "\\b(not|and|or|xor)\\b"
+
+    # Bitwise operators
+    - symbol.operator: "\\b(bit-or|bit-xor|bit-and|bit-shl|bit-shr)\\b"
+
+    # Membership operators
+    - symbol.operator: "\\b(in|not-in|starts-with|ends-with|has|not-has)\\b"
+
+    # String matching operators
+    - symbol.operator: "\\b(like|not-like)\\b"
+
+    # Redirection operators
+    - symbol.operator: "(err>|out>|e>|o>|err\\+out>|out\\+err>|o\\+e>|e\\+o>)(>|\\|)?"
+
+    # Comparison and arithmetic operators
+    - symbol.operator: "(==|!=|<=|>=|=~|!~|\\+\\+=|\\+=|-=|\\*=|/=|\\*\\*|//|\\+\\+|[+\\-*/%<>=!])"
+
+    # Assignment
+    - symbol.operator: "="
+
+    # Pipes and special symbols
+    - symbol.operator: "[|&;]"
+    - symbol: "[\\[\\]{}()@.,:]"
+
+    # Spread operator
+    - symbol.operator: "(\\.\\.\\.\\$|\\.\\.\\.)"
+
+    # Fat and thin arrows
+    - symbol.operator: "(=>|->)"
+
+    # Caret for external commands
+    - symbol.operator: "\\^"
+
+    # Type annotations (common types)
+    - type: "\\b(any|binary|block|bool|cell-path|closure|datetime|directory|duration|error|float|decimal|filesize|glob|int|list|nothing|number|path|range|record|string|table)\\b"
