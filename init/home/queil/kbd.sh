@@ -21,7 +21,7 @@ rm $copy_root -rf
 mkdir -p $ref_out
 mkdir -p $mod_out
 
-base=$(git log --format='%H %D' | grep -v "HEAD" | awk 'NF>1 {print $1; exit}')
+base=$(git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}')
 echo "Comparing against: $base"
 
 git -C "$src_root" archive "$base" | tar -x -C "$copy_root"
