@@ -26,6 +26,7 @@ ARG BROOT_VER=1.52.0
 ARG JJ_VER=0.35.0
 ARG ROOZ_VER=0.137.0
 ARG JIRA_CLI_VER=1.7.0
+ARG RIPGREP_VER=15.1.0
 
 RUN curl -sSL "https://github.com/zyedidia/eget/releases/download/v${EGET_VER}/eget-${EGET_VER}-linux_amd64.tar.gz" -o /tmp/eget.tar.gz && \
     tar -zxvf /tmp/eget.tar.gz -C /tmp && mv "/tmp/eget-${EGET_VER}-linux_amd64/eget" ./.local/bin/ && chmod +x ./.local/bin/eget && rm /tmp/eget.tar.gz && \
@@ -34,7 +35,8 @@ RUN curl -sSL "https://github.com/zyedidia/eget/releases/download/v${EGET_VER}/e
     eget Canop/broot --file=x86_64-unknown-linux-gnu/broot --tag "v${BROOT_VER}" && \
     eget jj-vcs/jj --tag "v${JJ_VER}" && \
     eget queil/rooz --tag "v${ROOZ_VER}" && \
-    eget ankitpokhrel/jira-cli --tag "v${JIRA_CLI_VER}"
+    eget ankitpokhrel/jira-cli --tag "v${JIRA_CLI_VER}" && \
+    eget BurntSushi/ripgrep --tag "v${RIPGREP_VER}"
 
 ARG INIT_REPO=https://github.com/queil/image
 ARG INIT_BRANCH=main
