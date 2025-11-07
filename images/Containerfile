@@ -36,7 +36,7 @@ RUN curl -sSL "https://github.com/zyedidia/eget/releases/download/v${EGET_VER}/e
     eget jj-vcs/jj --tag "v${JJ_VER}" && \
     eget queil/rooz --tag "v${ROOZ_VER}" && \
     eget ankitpokhrel/jira-cli --tag "v${JIRA_CLI_VER}" && \
-    eget BurntSushi/ripgrep --tag "v${RIPGREP_VER}"
+    eget BurntSushi/ripgrep --tag "${RIPGREP_VER}"
 
 ARG INIT_REPO=https://github.com/queil/image
 ARG INIT_BRANCH=main
