@@ -88,21 +88,21 @@ jobs:
 
       # ---- DOTNET 8 ----
 
-      - name: dotnet-8
-        id: dotnet8
+      - name: dotnet-10
+        id: dotnet10
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: dotnet-8
+          tags: dotnet-10
           context: .
           containerfiles: |
-            ./images/dotnet-8.Containerfile
+            ./images/dotnet-10.Containerfile
 
-      - name: Push dotnet-8
+      - name: Push dotnet-10
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ steps.dotnet8.outputs.image }}
-          tags: ${{ steps.dotnet8.outputs.tags }}
+          image: ${{ steps.dotnet10.outputs.image }}
+          tags: ${{ steps.dotnet10.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
 
