@@ -16,7 +16,7 @@ RUN code-server --install-extension Ionide.Ionide-fsharp && \
     code-server --install-extension ms-mssql.mssql
 
 USER root
-RUN microdnf install -y --nodocs --setopt install_weak_deps=0 --enablerepo=updates-testing dotnet-sdk-10.0 &&\
+RUN microdnf install -y --nodocs --setopt install_weak_deps=0 --enablerepo=updates-testing dotnet-sdk-10.0 && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
       dotnet-sdk-8.0 \
       #dotnet-sdk-10.0 \ 

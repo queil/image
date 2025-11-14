@@ -4,6 +4,7 @@ USER root
 
 # bicep language server requries dotnet 8.0
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
+    microdnf install -y --nodocs --setopt install_weak_deps=0 --enablerepo=updates-testing dotnet-sdk-10.0 && \
     microdnf install -y dotnet-sdk-8.0 helm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
@@ -28,7 +29,7 @@ RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-
     echo "exec dotnet ${HOME}/.vscode-server/extensions/ms-azuretools.vscode-bicep-${BICEP_LSP_VER}/bicepLanguageServer/Bicep.LangServer.dll \"$@\"" >> $BICEP_WRAPPER_PATH && \
     chmod +x $BICEP_WRAPPER_PATH
 
-RUN dotnet tool install --global fsy --version 0.20.0 && \
+RUN dotnet tool install --global fsy --version 0.21.0-alpha.2 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
 
