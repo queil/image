@@ -18,3 +18,10 @@ sidecars:
     env:
       DOCKER_TLS_CERTDIR: ''
       DOCKER_TLS_VERIFY: ''
+  ssh:
+    image: ghcr.io/queil/image:rider-ssh
+    ports:
+    - '2222'
+    init: false
+    mount_work: true
+    user: rider
