@@ -84,17 +84,17 @@ jobs:
           # tags: ${{ steps.mkdocs.outputs.tags }}
           # registry: ${{ env.REGISTRY }}
 
-      - name: rider-ssh
+      - name: rider
         id: rider
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: rider-ssh
+          tags: rider
           context: .
           containerfiles: |
-            ./images/rider-ssh.Containerfile
+            ./images/rider.Containerfile
 
-      - name: Push python
+      - name: Push rider
         uses: redhat-actions/push-to-registry@v2
         with:
           image: ${{ steps.rider.outputs.image }}
