@@ -1,4 +1,4 @@
-FROM ghcr.io/queil/image:latest
+FROM ghcr.io/queil/image:dotnet-10
 
 USER root
 RUN microdnf install --nodocs --setopt install_weak_deps=0 -y \
