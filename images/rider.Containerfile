@@ -2,7 +2,7 @@ FROM ghcr.io/queil/image:latest
 
 USER root
 RUN microdnf install --nodocs --setopt install_weak_deps=0 -y \
-    openssh-server openssh-clients java-21-openjdk java-21-openjdk-devel icu \
+    openssh-server openssh-clients java-21-openjdk java-21-openjdk-devel icu mesa-libGL \
     && microdnf clean all
 
 RUN mkdir -p /var/run/sshd && \
