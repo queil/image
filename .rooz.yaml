@@ -19,7 +19,7 @@ sidecars:
       DOCKER_TLS_CERTDIR: ''
       DOCKER_TLS_VERIFY: ''
   ssh:
-    image: ghcr.io/queil/image:rider-ssh
+    image: ghcr.io/queil/image:rider
     ports:
     - '2222'
     init: false
