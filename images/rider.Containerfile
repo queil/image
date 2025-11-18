@@ -6,9 +6,9 @@ RUN microdnf install --nodocs --setopt install_weak_deps=0 -y \
     && microdnf clean all
 
 RUN mkdir -p /var/run/sshd && \
-    ssh-keygen -A
-
-RUN echo "queil:rider" | chpasswd
+    ssh-keygen -A && \
+    chown queil:queil /etc/ssh/sshd_config && \
+    echo "queil:rider" | chpasswd
 
 USER queil
 
