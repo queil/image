@@ -24,4 +24,3 @@ sidecars:
     - '2222'
     init: false
     mount_work: true
-    user: rider
