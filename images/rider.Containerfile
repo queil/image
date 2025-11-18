@@ -12,8 +12,7 @@ RUN mkdir -p /var/run/sshd && \
     chown queil:queil /etc/ssh/sshd_config && \
     echo "queil:rider" | chpasswd  && \
     echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo "UsePAM no" >> /etc/ssh/sshd_config
+    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
 
 USER queil
 
