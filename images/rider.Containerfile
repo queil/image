@@ -11,11 +11,9 @@ RUN mkdir -p /var/run/sshd && \
     chmod 644 /etc/ssh/ssh_host_*_key.pub && \
     chown queil:queil /etc/ssh/sshd_config && \
     echo "queil:rider" | chpasswd  && \
-    cat >> /etc/ssh/sshd_config << 'EOF'
-PasswordAuthentication yes
-PubkeyAuthentication yes
-UsePAM no
-EOF
+    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
+    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
+    echo "UsePAM no" >> /etc/ssh/sshd_config
 
 USER queil
 
