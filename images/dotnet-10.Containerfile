@@ -29,6 +29,6 @@ RUN dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && \
     dotnet tool install -g csharp-ls && \
     dotnet tool install -g ATech.Ring.DotNet.Cli && \
-    dotnet tool install -g fsy --version 0.21.0-alpha.2 && fsy install-fsx-extensions
+    dotnet tool install -g fsy --version 0.21.1 && fsy install-fsx-extensions
 RUN mkdir -p ~/.config/micro/plug/lsp && \
     git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
