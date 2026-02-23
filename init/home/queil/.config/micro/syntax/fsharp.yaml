@@ -1,8 +1,6 @@
 filetype: fsharp
-
 detect:
     filename: "\\.fs(i|x)?$"
-
 rules:
     - identifier.type: "\\b[A-Z]{1}[A-Za-z0-9]+(\\.)?\\b"
     #- identifier.module: "module +[A-Za-z0-9]+"
@@ -11,7 +9,6 @@ rules:
     #- identifier: "\\b[A-Za-z][0-9a-z_]{2,}\\b"
     
     - type.keyword: "\\b(type|class|module|exception)\\b"
-
     - symbol.operator: "[\\-+/*=<>?:!~%&|]"
     - symbol.brackets: "[{}()\\[\\]]"
       #declarations
@@ -36,7 +33,51 @@ rules:
       #keywords which don't exist in ocaml
     - type: "\\b(base|delegate|downcast|extern|finally|fixed|global|inline|interface|internal|let!|member|namespace|null|override|private|public)\\b"
     - type: "\\b(return|return!|select|static|upcast|use|use!|void|yield|yield!)\\b"
-      
+
+      # interpolated triple-quoted strings $"""..."""
+    - constant.string:
+        start: "\\$\"\"\""
+        end: "\"\"\""
+        rules:
+        - constant.specialChar: "\\{\\{"
+        - constant.specialChar: "\\}\\}"
+        - identifier:
+            start: "\\{"
+            end: "\\}"
+            rules:
+            - constant.string:
+                start: "\""
+                end: "\""
+                skip: "\\\\."
+                rules: []
+
+      # interpolated strings $"..."
+    - constant.string:
+        start: "\\$\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+        - constant.specialChar: "\\{\\{"
+        - constant.specialChar: "\\}\\}"
+        - constant.specialChar: "\\\\[abfnrtv'\\\"\\\\]"
+        - constant.specialChar: "\\\\([0-7]{3}|x[A-Fa-f0-9]{2}|u[A-Fa-f0-9]{4}|U[A-Fa-f0-9]{8})"
+        - identifier:
+            start: "\\{"
+            end: "\\}"
+            rules:
+            - constant.string:
+                start: "\""
+                end: "\""
+                skip: "\\\\."
+                rules: []
+
+      # triple-quoted strings """..."""
+    - constant.string:
+        start: "\"\"\""
+        end: "\"\"\""
+        rules: []
+
+      # regular strings
     - constant.string:
         start: "\""
         end: "\""
@@ -50,7 +91,6 @@ rules:
         start: "\\(\\*"
         end: "\\*\\)"
         rules: []
-
     - comment:
         start: "//"
         end: "$"
