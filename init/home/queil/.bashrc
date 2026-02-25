@@ -37,6 +37,7 @@ alias inf='git add . && git commit -a --amend --no-edit'
 alias pu='git push -u origin "$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)"'
 alias pl='git pull'
 alias wipe='git reset --hard && git clean -xfd'
+wipe() { git reset --hard && git clean -fd "${@}"; }
 alias uuid=uuidgen
 alias nano=micro
 
