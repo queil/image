@@ -36,11 +36,11 @@ RUN dotnet tool install --global fsy --version 0.22.0 && \
 RUN mkdir -p ~/.config/micro/plug/lsp && \
     git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
 
-ARG KUSTOMIZE_VER=5.7.1
-ARG KUBESEAL_VER=0.32.2
-ARG ARGO_WF_VER=3.7.2
-ARG ARGO_CD_VER=3.1.6
-ARG STERN_VER=1.33.0
+ARG KUSTOMIZE_VER=5.8.1
+ARG KUBESEAL_VER=0.35.0
+ARG ARGO_WF_VER=4.0.1
+ARG ARGO_CD_VER=3.3.2
+ARG STERN_VER=1.33.1
 
 RUN eget kubernetes-sigs/kustomize  --tag="v${KUSTOMIZE_VER}" && \
     eget bitnami-labs/sealed-secrets --asset=kubeseal --asset=^.sig --file=kubeseal --tag="v${KUBESEAL_VER}" && \
