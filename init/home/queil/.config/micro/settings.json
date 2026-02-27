@@ -11,5 +11,6 @@
     "diffgutter": true,
     "lsp.server": "bicep=bicep-lsp,fsharp=fsautocomplete --adaptive-lsp-server-enabled --project-graph-enabled={\"fsiExtraParameters\":[\"--compilertool:/home/queil/.fsharp/fsx-extensions/.fsch\"]}",
     "mkparents": true,
-    "tabstospaces": true
+    "tabstospaces": true,
+    "showchars": "tab=>,space=.,itab=|>,ispace=|"
 }
