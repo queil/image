@@ -6,7 +6,7 @@ ARG HOME=/home/$USER
 RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo && \
     microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    man mmv nu systemd tar unzip bash-completion git git-delta micro jq dnsutils tree gh \
+    man mmv nu systemd tar unzip bash-completion git git-delta jq dnsutils tree gh \
     iproute htop which procps-ng tree fzf tealdeer \
     docker-ce-cli docker-compose-plugin docker-buildx-plugin && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -21,6 +21,7 @@ RUN curl -sSL https://starship.rs/install.sh -o ./install.sh && \
     chmod +x ./install.sh && mkdir -p ./.local/bin && ./install.sh --yes --bin-dir=./.local/bin && rm ./install.sh
 
 ARG EGET_VER=1.3.4
+ARG MICRO_VER=2.0.15
 ARG ZELLIJ_VER=0.43.1
 ARG BROOT_VER=1.55.0
 ARG JJ_VER=0.38.0
@@ -32,6 +33,7 @@ RUN curl -sSL "https://github.com/zyedidia/eget/releases/download/v${EGET_VER}/e
     tar -zxvf /tmp/eget.tar.gz -C /tmp && mv "/tmp/eget-${EGET_VER}-linux_amd64/eget" ./.local/bin/ && chmod +x ./.local/bin/eget && rm /tmp/eget.tar.gz && \
     echo -e '[global]\ntarget = "~/.local/bin"' > ~/.eget.toml && \
     eget zellij-org/zellij --asset=zellij-no-web --tag "v${ZELLIJ_VER}" && \
+    eget micro-editor/micro --asset "micro-${MICRO_VER}-linux64-static.tar.gz" --tag "v${MICRO_VER}" && \
     eget Canop/broot --file=x86_64-unknown-linux-gnu/broot --tag "v${BROOT_VER}" && \
     eget jj-vcs/jj --tag "v${JJ_VER}" && \
     eget queil/rooz --tag "v${ROOZ_VER}" && \
