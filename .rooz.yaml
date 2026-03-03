@@ -4,6 +4,13 @@ shell:
 - zellij --session rooz || zellij attach rooz
 env:
   DOCKER_HOST: "tcp://dkr:2375"
+
+data:
+  work: {}
+
+mounts:
+  /work: work
+
 sidecars:
   dkr:
     image: docker.io/docker:28-dind-rootless
@@ -11,16 +18,11 @@ sidecars:
     privileged: true
     mount_work: true
     mounts:
-    - /var/lib/docker/
+      /var/lib/docker/: {}
+      /work: work
     args:
     - "--tls=false"
     - "--host=tcp://0.0.0.0:2375"
     env:
       DOCKER_TLS_CERTDIR: ''
       DOCKER_TLS_VERIFY: ''
-  ssh:
-    image: ghcr.io/queil/image:rider
-    ports:
-    - '2222'
-    init: false
-    mount_work: true
