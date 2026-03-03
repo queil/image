@@ -16,7 +16,6 @@ sidecars:
     image: docker.io/docker:28-dind-rootless
     init: false
     privileged: true
-    mount_work: true
     mounts:
       /var/lib/docker/: {}
       /work: work
