@@ -48,6 +48,23 @@ jobs:
       #     registry: ${{ env.REGISTRY }}
 
 
+      - name: claude
+        id: claude
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: claude
+          context: .
+          containerfiles: |
+            ./images/claude.Containerfile
+
+      - name: Push claude
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.claude.outputs.image }}
+          tags: ${{ steps.claude.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
       - name: nodejs
         id: nodejs
         uses: redhat-actions/buildah-build@v2
