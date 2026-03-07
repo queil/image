@@ -6,3 +6,5 @@ RUN apk add libgcc libstdc++ ripgrep bash curl
 USER claude
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
+
+ENV PATH="/home/claude/.local/bin:$PATH"
