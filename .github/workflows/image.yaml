@@ -15,7 +15,7 @@ jobs:
     steps:
 
       - name: Clone the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: "Fix no space left on device"
         run: rm -rf /opt/hostedtoolcache
