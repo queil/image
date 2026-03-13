@@ -2,10 +2,9 @@ FROM ghcr.io/queil/image:latest
 
 USER root
 
-# bicep language server requries dotnet 8.0
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 --enablerepo=updates-testing dotnet-sdk-10.0 && \
-    microdnf install -y dotnet-sdk-8.0 helm --nodocs --setopt install_weak_deps=0 && \
+    microdnf install -y helm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all && rm -rf /var/cache/yum && \
@@ -20,7 +19,7 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
 ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
-ARG BICEP_LSP_VER=0.38.5
+ARG BICEP_LSP_VER=0.41.2
 ARG BICEP_WRAPPER_PATH=$HOME/.local/bin/bicep-lsp
 
 RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-fsharp && \
@@ -29,7 +28,7 @@ RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-
     echo "exec dotnet ${HOME}/.vscode-server/extensions/ms-azuretools.vscode-bicep-${BICEP_LSP_VER}/bicepLanguageServer/Bicep.LangServer.dll \"$@\"" >> $BICEP_WRAPPER_PATH && \
     chmod +x $BICEP_WRAPPER_PATH
 
-RUN dotnet tool install --global fsy --version 0.22.0 && \
+RUN dotnet tool install --global fsy --version 0.22.7 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
 
