@@ -15,6 +15,7 @@ sidecars:
   dkr:
     image: docker.io/docker:28-dind-rootless
     init: false
+    egress: true
     privileged: true
     mounts:
       /var/lib/docker/: {}
