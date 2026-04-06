@@ -19,7 +19,7 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
 ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
-ARG BICEP_LSP_VER=0.41.2
+ARG BICEP_LSP_VER=0.42.1
 ARG BICEP_WRAPPER_PATH=$HOME/.local/bin/bicep-lsp
 
 RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-fsharp && \
@@ -36,9 +36,9 @@ RUN mkdir -p ~/.config/micro/plug/lsp && \
     git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
 
 ARG KUSTOMIZE_VER=5.8.1
-ARG KUBESEAL_VER=0.35.0
-ARG ARGO_WF_VER=4.0.1
-ARG ARGO_CD_VER=3.3.2
+ARG KUBESEAL_VER=0.36.1
+ARG ARGO_WF_VER=4.0.4
+ARG ARGO_CD_VER=3.3.6
 ARG STERN_VER=1.33.1
 
 RUN eget kubernetes-sigs/kustomize  --tag="v${KUSTOMIZE_VER}" && \
