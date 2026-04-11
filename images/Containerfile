@@ -7,10 +7,19 @@ RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yu
     microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
     man mmv nu systemd tar unzip bash-completion git git-delta jq dnsutils tree gh \
-    iproute htop which procps-ng tree fzf tealdeer \
+    iproute htop which procps-ng tree fzf openssh-server openssh-clients \
     docker-ce-cli docker-compose-plugin docker-buildx-plugin && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     adduser $USER && chown $USER -R $HOME
+
+RUN mkdir -p /var/run/sshd && \
+    ssh-keygen -A && \
+    chmod 644 /etc/ssh/ssh_host_*_key && \
+    chmod 644 /etc/ssh/ssh_host_*_key.pub && \
+    chown queil:queil /etc/ssh/sshd_config && \
+    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
+    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
+    echo "UsePam yes" >> /etc/ssh/sshd_config
 
 WORKDIR $HOME
 USER $USER
@@ -55,9 +64,9 @@ RUN git clone --no-checkout $INIT_REPO . && \
 WORKDIR $HOME
 
 RUN "./.upd/init/home/$USER/update.sh"
-
-
 # this is needed for tools like: dockerd-rootless.sh or zellij
 ENV XDG_RUNTIME_DIR="/tmp"
 
 WORKDIR $HOME
+
+CMD ["/usr/sbin/sshd", "-D", "-p", "2222", "-E", "/dev/stderr"]
