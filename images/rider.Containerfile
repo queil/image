@@ -10,7 +10,6 @@ RUN mkdir -p /var/run/sshd && \
     chmod 644 /etc/ssh/ssh_host_*_key && \
     chmod 644 /etc/ssh/ssh_host_*_key.pub && \
     chown queil:queil /etc/ssh/sshd_config && \
-    echo 'queil:$6$0jo2AZUfQxtTnRvh$xdhqORGKE4LGZRE.O8QBEpYtTh64/.qILTjHju3WkeihQxFeBi83NVES/j8o8Shq0nRbaDteSFV0aOZPvaIsX0' | chpasswd -e  && \
     echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
     echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
     echo "UsePam yes" >> /etc/ssh/sshd_config
