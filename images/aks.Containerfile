@@ -3,7 +3,7 @@ FROM ghcr.io/queil/image:latest
 USER root
 
 RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-    microdnf install -y --nodocs --setopt install_weak_deps=0 --enablerepo=updates-testing openssh-server openssh-clients dotnet-sdk-10.0 && \
+    microdnf install -y --nodocs --setopt install_weak_deps=0 --enablerepo=updates-testing dotnet-sdk-10.0 && \
     microdnf install -y helm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm --nodocs --setopt install_weak_deps=0 && \
     microdnf install -y azure-cli --nodocs --setopt install_weak_deps=0 && \
@@ -12,15 +12,6 @@ RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
 
 ARG USER=queil
 ARG HOME=/home/$USER
-
-RUN mkdir -p /var/run/sshd && \
-    ssh-keygen -A && \
-    chmod 644 /etc/ssh/ssh_host_*_key && \
-    chmod 644 /etc/ssh/ssh_host_*_key.pub && \
-    chown queil:queil /etc/ssh/sshd_config && \
-    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo "UsePam yes" >> /etc/ssh/sshd_config
 
 USER queil
 
@@ -58,5 +49,3 @@ RUN eget kubernetes-sigs/kustomize  --tag="v${KUSTOMIZE_VER}" && \
 
 RUN echo 'alias k=kubectl' >> $HOME/.image.bashrc && \
     echo 'alias kb="kustomize build"' >> $HOME/.image.bashrc
-
-CMD ["/usr/sbin/sshd", "-D", "-p", "2222", "-E", "/dev/stderr"]
