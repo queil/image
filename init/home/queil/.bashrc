@@ -66,3 +66,7 @@ starship_precmd_user_func="set_win_title"
 . ~/.image.bashrc
 
 source /home/queil/.config/broot/launcher/bash/br
+
+load_container_env() {
+  export $(cat /proc/1/environ | tr '\0' '\n' | grep -v '^PATH=\|^HOME=\|^USER=\|^TERM=\|^SHELL=\|^PWD=\|^HOSTNAME=' | xargs)
+}
