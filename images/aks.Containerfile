@@ -28,7 +28,7 @@ RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-
     echo "exec dotnet ${HOME}/.vscode-server/extensions/ms-azuretools.vscode-bicep-${BICEP_LSP_VER}/bicepLanguageServer/Bicep.LangServer.dll \"$@\"" >> $BICEP_WRAPPER_PATH && \
     chmod +x $BICEP_WRAPPER_PATH
 
-RUN dotnet tool install --global fsy --version 0.22.7 && \
+RUN dotnet tool install --global fsy --version 0.23.0 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
 
