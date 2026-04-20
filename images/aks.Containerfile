@@ -22,12 +22,6 @@ ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 ARG BICEP_LSP_VER=0.42.1
 ARG BICEP_WRAPPER_PATH=$HOME/.local/bin/bicep-lsp
 
-RUN code-server --accept-server-license-terms --install-extension Ionide.Ionide-fsharp && \
-    code-server --accept-server-license-terms --install-extension "ms-azuretools.vscode-bicep@${BICEP_LSP_VER}" && \
-    echo '#!/bin/bash' > $BICEP_WRAPPER_PATH && \
-    echo "exec dotnet ${HOME}/.vscode-server/extensions/ms-azuretools.vscode-bicep-${BICEP_LSP_VER}/bicepLanguageServer/Bicep.LangServer.dll \"$@\"" >> $BICEP_WRAPPER_PATH && \
-    chmod +x $BICEP_WRAPPER_PATH
-
 RUN dotnet tool install --global fsy --version 0.23.0 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
