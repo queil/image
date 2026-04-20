@@ -15,7 +15,7 @@ tar -xzf "$TMP/server.tar.gz" -C "$TMP" --strip 1
 
 mkdir -p "$HOME/.vscode-server/extensions"
 
-args=()
+args=(--accept-server-license-terms)
 for ext in "$@"; do
   args+=(--install-extension "$ext")
 done
