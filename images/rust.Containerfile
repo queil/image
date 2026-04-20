@@ -15,5 +15,5 @@ RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 ENV PATH="${PATH}:${HOME}/.cargo/bin"
 
-RUN code-server --install-extension rust-lang.rust-analyzer && \
-    code-server --install-extension vadimcn.vscode-lldb
+# RUN code-server --install-extension rust-lang.rust-analyzer && \
+#    code-server --install-extension vadimcn.vscode-lldb
