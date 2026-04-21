@@ -28,6 +28,25 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
 
+      # ---- RUST ----
+
+      - name: rust
+        id: rust
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: rust
+          context: .
+          containerfiles: |
+            ./images/rust.Containerfile
+
+      - name: Push rust
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.rust.outputs.image }}
+          tags: ${{ steps.rust.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
+
       # ---- HUGO ----
 
       # - name: hugo
@@ -101,24 +120,7 @@ jobs:
           # tags: ${{ steps.mkdocs.outputs.tags }}
           # registry: ${{ env.REGISTRY }}
 
-      - name: rider
-        id: rider
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: rider
-          context: .
-          containerfiles: |
-            ./images/rider.Containerfile
-
-      - name: Push rider
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.rider.outputs.image }}
-          tags: ${{ steps.rider.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
-
-      # ---- DOTNET 8 ----
+      # ---- DOTNET ----
 
       - name: dotnet-10
         id: dotnet10
@@ -137,6 +139,23 @@ jobs:
           tags: ${{ steps.dotnet10.outputs.tags }}
           registry: ${{ env.REGISTRY }}
 
+
+      - name: rider
+        id: rider
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          tags: rider
+          context: .
+          containerfiles: |
+            ./images/rider.Containerfile
+
+      - name: Push rider
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.rider.outputs.image }}
+          tags: ${{ steps.rider.outputs.tags }}
+          registry: ${{ env.REGISTRY }}
 
       - name: aks
         id: aks
@@ -157,41 +176,23 @@ jobs:
 
       # k3s
 
-      - name: k3s
-        id: k3s
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: k3s
-          context: .
-          containerfiles: |
-            ./images/k3s.Containerfile
+      # - name: k3s
+      #   id: k3s
+      #   uses: redhat-actions/buildah-build@v2
+      #   with:
+      #     image: ${{ env.IMAGE_NAME }}
+      #     tags: k3s
+      #     context: .
+      #     containerfiles: |
+      #       ./images/k3s.Containerfile
 
-      - name: Push k3s
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.k3s.outputs.image }}
-          tags: ${{ steps.k3s.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+      # - name: Push k3s
+      #   uses: redhat-actions/push-to-registry@v2
+      #   with:
+      #     image: ${{ steps.k3s.outputs.image }}
+      #     tags: ${{ steps.k3s.outputs.tags }}
+      #     registry: ${{ env.REGISTRY }}
 
-      # ---- RUST ----
-
-      # - name: rust
-        # id: rust
-        # uses: redhat-actions/buildah-build@v2
-        # with:
-          # image: ${{ env.IMAGE_NAME }}
-          # tags: rust
-          # context: .
-          # containerfiles: |
-            # ./images/rust.Containerfile
-# 
-      # - name: Push rust
-        # uses: redhat-actions/push-to-registry@v2
-        # with:
-          # image: ${{ steps.rust.outputs.image }}
-          # tags: ${{ steps.rust.outputs.tags }}
-          # registry: ${{ env.REGISTRY }}
 
       # # ---- PYTHON ----
 
