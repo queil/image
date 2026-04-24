@@ -3,7 +3,7 @@ FROM docker.io/alpine:latest
 USER root
 
 RUN adduser -D -u 7222 -g claude claude
-RUN apk add libgcc libstdc++ ripgrep bash curl jq git delta fd tree dotnet10-sdk ca-certificates unzip
+RUN apk add libgcc libstdc++ ripgrep bash curl jq git delta fd tree micro ca-certificates unzip
 
 USER claude
 ENV ZELLIJ_VER=0.44.0
@@ -12,7 +12,7 @@ RUN curl -sSL "https://github.com/zellij-org/zellij/releases/download/v${ZELLIJ_
     tar -zxvf /tmp/zellij.tar.gz -C /tmp && mkdir -p ~/.local/bin && mv /tmp/zellij ~/.local/bin/ && chmod +x ~/.local/bin/zellij && rm /tmp/zellij.tar.gz
 
 RUN curl -fsSL https://claude.ai/install.sh | bash
-
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib/dotnet
 # bun for plugins
 RUN curl -fsSL https://bun.sh/install | bash
 
