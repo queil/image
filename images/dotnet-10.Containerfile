@@ -12,12 +12,14 @@ RUN echo 'alias drf="dotnet nuget locals --clear http-cache && dotnet restore --
 
 USER root
 RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
-      dotnet-sdk-10.0 \
       # IronPDF deps
       chromium glibc-devel nss at-spi2-atk libXcomposite libXrandr mesa-libgbm alsa-lib pango cups-libs libXdamage libxshmfence \
       && microdnf clean all && rm -rf /var/cache/yum
 
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib64/dotnet
+
 USER queil
+
 RUN dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && \
     dotnet tool install -g csharp-ls && \
