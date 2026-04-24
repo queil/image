@@ -5,7 +5,7 @@ USER root
 RUN adduser -D -u 7222 -g claude claude
 RUN apk add libgcc libstdc++ ripgrep bash curl jq git delta fd tree micro ca-certificates unzip
 
-RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s /usr/lib/dotnet
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib/dotnet
 
 USER claude
 ENV ZELLIJ_VER=0.44.0
