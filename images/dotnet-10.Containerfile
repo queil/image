@@ -16,7 +16,7 @@ RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
       chromium glibc-devel nss at-spi2-atk libXcomposite libXrandr mesa-libgbm alsa-lib pango cups-libs libXdamage libxshmfence \
       && microdnf clean all && rm -rf /var/cache/yum
 
-RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib64/dotnet
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib64/dotnet && ln -s /usr/lib64/dotnet/dotnet /usr/local/bin/dotnet
 
 USER queil
 
