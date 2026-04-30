@@ -1,4 +1,4 @@
-FROM docker.io/fedora:43
+FROM docker.io/fedora:44
 
 ARG USER=queil
 ARG HOME=/home/$USER
