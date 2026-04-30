@@ -38,6 +38,11 @@ alias pu='git push -u origin "$(git rev-parse --symbolic-full-name --abbrev-ref 
 alias pl='git pull'
 alias wipe='git reset --hard && git clean -xfd'
 function wipe() { git reset --hard && git clean -fd "${@}"; }
+fgh() {
+  git --no-pager log -"${1:-100}" --oneline |
+    fzf --preview 'git show --color=always {1}' |
+    awk '{print $1}'
+}
 alias uuid=uuidgen
 alias nano=micro
 
