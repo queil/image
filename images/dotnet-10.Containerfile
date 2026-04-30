@@ -3,9 +3,10 @@ FROM ghcr.io/queil/image:latest
 ARG USER=queil
 ARG HOME=/home/$USER
 
-ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
-ENV DOTNET_NOLOGO=true
-ENV PATH="${PATH}:${HOME}/.dotnet/tools"
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=true \
+    DOTNET_NOLOGO=true \
+    DOTNET_ROOT=/usr/lib64/dotnet \
+    PATH=/usr/lib64/dotnet:/home/queil/.dotnet/tools:$PATH
 
 RUN echo 'alias drf="dotnet nuget locals --clear http-cache && dotnet restore --use-lock-file --force-evaluate"' >> $HOME/.image.bashrc && \
     echo 'alias dlp="dotnet restore && dotnet list package --outdated"' >> $HOME/.image.bashrc
@@ -18,7 +19,7 @@ RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
       libicu krb5-libs zlib openssl-libs \
       && microdnf clean all && rm -rf /var/cache/yum
 
-RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib64/dotnet && ln -s /usr/lib64/dotnet/dotnet /usr/local/bin/dotnet
+RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib64/dotnet
 
 USER queil
 
