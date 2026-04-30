@@ -14,6 +14,8 @@ USER root
 RUN microdnf install -y --nodocs --setopt install_weak_deps=0 \
       # IronPDF deps
       chromium glibc-devel nss at-spi2-atk libXcomposite libXrandr mesa-libgbm alsa-lib pango cups-libs libXdamage libxshmfence \
+      # Dotnet deps
+      libicu krb5-libs zlib openssl-libs \
       && microdnf clean all && rm -rf /var/cache/yum
 
 RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib64/dotnet && ln -s /usr/lib64/dotnet/dotnet /usr/local/bin/dotnet
