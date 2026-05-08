@@ -19,9 +19,6 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
 ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
-ARG BICEP_LSP_VER=0.43.8
-ARG BICEP_WRAPPER_PATH=$HOME/.local/bin/bicep-lsp
-
 RUN dotnet tool install --global fsy --version 0.25.0 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
