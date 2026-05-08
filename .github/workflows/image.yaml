@@ -140,22 +140,22 @@ jobs:
           registry: ${{ env.REGISTRY }}
 
 
-      - name: rider
-        id: rider
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: rider
-          context: .
-          containerfiles: |
-            ./images/rider.Containerfile
-
-      - name: Push rider
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.rider.outputs.image }}
-          tags: ${{ steps.rider.outputs.tags }}
-          registry: ${{ env.REGISTRY }}
+#       - name: rider
+#         id: rider
+#         uses: redhat-actions/buildah-build@v2
+#         with:
+#           image: ${{ env.IMAGE_NAME }}
+#           tags: rider
+#           context: .
+#           containerfiles: |
+#             ./images/rider.Containerfile
+# 
+#       - name: Push rider
+#         uses: redhat-actions/push-to-registry@v2
+#         with:
+#           image: ${{ steps.rider.outputs.image }}
+#           tags: ${{ steps.rider.outputs.tags }}
+#           registry: ${{ env.REGISTRY }}
 
       - name: aks
         id: aks
