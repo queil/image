@@ -1,6 +1,6 @@
 keybinds clear-defaults=true {
     shared_except "locked" {
-        bind "F10" { Quit; }
+        bind "F10" { Detach; }
 
         bind "Alt Left" { MoveFocus "Left"; }
         bind "Alt Right" { MoveFocus "Right"; }
