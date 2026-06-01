@@ -19,7 +19,7 @@ ENV DOTNET_CLI_TELEMETRY_OPTOUT=true
 ENV DOTNET_NOLOGO=true
 ENV PATH="${PATH}:${HOME}/.dotnet/tools"
 
-RUN dotnet tool install --global fsy --version 0.25.0 && \
+RUN dotnet tool install --global fsy --version 0.27.2 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
 
