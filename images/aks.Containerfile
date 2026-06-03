@@ -31,12 +31,16 @@ ARG KUBESEAL_VER=0.36.6
 ARG ARGO_WF_VER=4.0.5
 ARG ARGO_CD_VER=3.4.1
 ARG STERN_VER=1.34.0
+ARG TKN_VER=0.45.0
+ARG TKN_PAC_VER=0.47.0
 
 RUN eget kubernetes-sigs/kustomize --tag="v${KUSTOMIZE_VER}" && \
     eget bitnami-labs/sealed-secrets --asset=kubeseal --asset=^.sig --file=kubeseal --tag="v${KUBESEAL_VER}" && \
-    eget argoproj/argo-workflows --tag="${ARGO_WF_VER}" && \
-    eget argoproj/argo-cd --tag="${ARGO_CD_VER}" && \
-    eget stern/stern --tag="${STERN_VER}"
+    eget argoproj/argo-workflows --tag="v${ARGO_WF_VER}" && \
+    eget argoproj/argo-cd --tag="v${ARGO_CD_VER}" && \
+    eget stern/stern --tag="v${STERN_VER}" && \
+    eget tektoncd/cli --tag="v${TKN_VER}" --file tkn && \
+    eget tektoncd/pipelines-as-code --tag="v${TKN_PAC_VER}" --asset "tkn-pac_${TKN_PAC_VER}_linux_x86_64.tar.gz" --file tkn-pac
 
 RUN echo 'alias k=kubectl' >> $HOME/.image.bashrc && \
     echo 'alias kb="kustomize build"' >> $HOME/.image.bashrc
