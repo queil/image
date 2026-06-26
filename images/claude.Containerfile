@@ -3,7 +3,7 @@ FROM docker.io/alpine:latest
 USER root
 
 RUN adduser -D -u 7222 -g claude claude
-RUN apk add libgcc libstdc++ ripgrep bash curl jq git delta fd tree micro ca-certificates unzip
+RUN apk add libgcc libstdc++ ripgrep bash curl jq git delta fd tree micro ca-certificates unzip nodejs npm
 
 RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib/dotnet
 
