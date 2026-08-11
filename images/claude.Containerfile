@@ -9,10 +9,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     npx --yes playwright install-deps && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh | bash -s -- --install-dir /usr/lib/dotnet
+RUN install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && apt-get install -y --no-install-recommends \
+    docker-ce-cli docker-buildx-plugin docker-compose-plugin && \
+    rm -rf /var/lib/apt/lists/*
 
 USER claude
-
 ENV ZELLIJ_VER=0.44.3
 
 RUN curl -sSL "https://github.com/zellij-org/zellij/releases/download/v${ZELLIJ_VER}/zellij-no-web-aarch64-unknown-linux-musl.tar.gz" -o /tmp/zellij.tar.gz && \
@@ -23,5 +28,4 @@ RUN curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_VER"
 
 # bun for plugins
 RUN curl -fsSL https://bun.sh/install | bash
-
 ENV PATH="/home/claude/.local/bin:/home/claude/.bun/bin:$PATH"
