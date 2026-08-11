@@ -32,7 +32,7 @@ jobs:
 
       - name: rust
         id: rust
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: rust
@@ -41,7 +41,7 @@ jobs:
             ./images/rust.Containerfile
 
       - name: Push rust
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ steps.rust.outputs.image }}
           tags: ${{ steps.rust.outputs.tags }}
@@ -51,7 +51,7 @@ jobs:
 
       # - name: hugo
       #   id: hugo
-      #   uses: redhat-actions/buildah-build@v2
+      #   uses: redhat-actions/buildah-build@v3
       #   with:
       #     image: ${{ env.IMAGE_NAME }}
       #     tags: hugo
@@ -60,7 +60,7 @@ jobs:
       #       ./images/hugo.Containerfile
 
       # - name: Push hugo
-      #   uses: redhat-actions/push-to-registry@v2
+      #   uses: redhat-actions/push-to-registry@v3
       #   with:
       #     image: ${{ steps.hugo.outputs.image }}
       #     tags: ${{ steps.hugo.outputs.tags }}
@@ -69,7 +69,7 @@ jobs:
 
       - name: claude
         id: claude
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: claude
@@ -78,7 +78,7 @@ jobs:
             ./images/claude.Containerfile
 
       - name: Push claude
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ steps.claude.outputs.image }}
           tags: ${{ steps.claude.outputs.tags }}
@@ -86,7 +86,7 @@ jobs:
 
       - name: nodejs
         id: nodejs
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: nodejs
@@ -95,7 +95,7 @@ jobs:
             ./images/nodejs.Containerfile
 
       - name: Push nodejs
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ steps.nodejs.outputs.image }}
           tags: ${{ steps.nodejs.outputs.tags }}
@@ -105,7 +105,7 @@ jobs:
 
       # - name: mkdocs
         # id: mkdocs
-        # uses: redhat-actions/buildah-build@v2
+        # uses: redhat-actions/buildah-build@v3
         # with:
           # image: ${{ env.IMAGE_NAME }}
           # tags: mkdocs
@@ -114,7 +114,7 @@ jobs:
             # ./images/mkdocs.Containerfile
 # 
       # - name: Push mkdocs
-        # uses: redhat-actions/push-to-registry@v2
+        # uses: redhat-actions/push-to-registry@v3
         # with:
           # image: ${{ steps.mkdocs.outputs.image }}
           # tags: ${{ steps.mkdocs.outputs.tags }}
@@ -124,7 +124,7 @@ jobs:
 
       - name: dotnet-10
         id: dotnet10
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: dotnet-10
@@ -133,7 +133,7 @@ jobs:
             ./images/dotnet-10.Containerfile
 
       - name: Push dotnet-10
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ steps.dotnet10.outputs.image }}
           tags: ${{ steps.dotnet10.outputs.tags }}
@@ -142,7 +142,7 @@ jobs:
 
 #       - name: rider
 #         id: rider
-#         uses: redhat-actions/buildah-build@v2
+#         uses: redhat-actions/buildah-build@v3
 #         with:
 #           image: ${{ env.IMAGE_NAME }}
 #           tags: rider
@@ -151,7 +151,7 @@ jobs:
 #             ./images/rider.Containerfile
 # 
 #       - name: Push rider
-#         uses: redhat-actions/push-to-registry@v2
+#         uses: redhat-actions/push-to-registry@v3
 #         with:
 #           image: ${{ steps.rider.outputs.image }}
 #           tags: ${{ steps.rider.outputs.tags }}
@@ -159,7 +159,7 @@ jobs:
 
       - name: aks
         id: aks
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: aks
@@ -168,7 +168,7 @@ jobs:
             ./images/aks.Containerfile
 
       - name: Push aks
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ steps.aks.outputs.image }}
           tags: ${{ steps.aks.outputs.tags }}
@@ -178,7 +178,7 @@ jobs:
 
       # - name: k3s
       #   id: k3s
-      #   uses: redhat-actions/buildah-build@v2
+      #   uses: redhat-actions/buildah-build@v3
       #   with:
       #     image: ${{ env.IMAGE_NAME }}
       #     tags: k3s
@@ -187,7 +187,7 @@ jobs:
       #       ./images/k3s.Containerfile
 
       # - name: Push k3s
-      #   uses: redhat-actions/push-to-registry@v2
+      #   uses: redhat-actions/push-to-registry@v3
       #   with:
       #     image: ${{ steps.k3s.outputs.image }}
       #     tags: ${{ steps.k3s.outputs.tags }}
@@ -198,7 +198,7 @@ jobs:
 
       - name: python
         id: python
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@v3
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: python
@@ -207,7 +207,7 @@ jobs:
             ./images/python.Containerfile
 
       - name: Push python
-        uses: redhat-actions/push-to-registry@v2
+        uses: redhat-actions/push-to-registry@v3
         with:
           image: ${{ steps.python.outputs.image }}
           tags: ${{ steps.python.outputs.tags }}
