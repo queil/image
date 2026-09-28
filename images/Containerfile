@@ -6,7 +6,7 @@ ARG HOME=/home/$USER
 RUN curl -sSL https://download.docker.com/linux/fedora/docker-ce.repo -o /etc/yum.repos.d/docker-ce.repo && \
     microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
-    man mmv nu systemd tar unzip bash-completion git git-delta jq dnsutils tree gh \
+    man mmv systemd tar unzip bash-completion git git-delta jq dnsutils tree gh \
     iproute htop which procps-ng tree fzf openssh-server openssh-clients \
     docker-ce-cli docker-compose-plugin docker-buildx-plugin && \
     ln -s /usr/bin/python3 /usr/bin/python && \
@@ -33,10 +33,10 @@ RUN curl -fsSL https://weir.sh/install.sh | sh
 
 ARG EGET_VER=1.3.4
 ARG MICRO_VER=2.0.15
-ARG ZELLIJ_VER=0.45.0
-ARG BROOT_VER=1.59.0
-ARG JJ_VER=0.44.0
-ARG ROOZ_VER=0.154.3
+ARG ZELLIJ_VER=0.45.1
+ARG BROOT_VER=1.60.2
+ARG JJ_VER=0.45.1
+ARG ROOZ_VER=0.159.0
 ARG JIRA_CLI_VER=1.7.0
 ARG RIPGREP_VER=15.2.0
 
