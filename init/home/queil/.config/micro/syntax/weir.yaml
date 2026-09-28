@@ -1,0 +1,232 @@
+# micro editor syntax for weir.
+# Install: copy to ~/.config/micro/syntax/weir.yaml
+#
+# Kept in-repo so grammar sessions can amend it alongside the parser
+# NOTE: mode coloring (command vs expression) is LSP semantic tokens
+# [D:semantic-tokens] — this static grammar stays coarse BY DESIGN
+# (regex cannot know scope); micro's lsp-plugin token support is
+# uninvestigated, so micro renders lexical colors only
+# (checked against the keyword set and scanner pins, 2026-07-21).
+#
+# ENGINE: micro is Go RE2 — NO lookbehind, NO lookahead. Rules the
+# richer editors express with lookaround are STATED shortfalls here as
+# `# micro-exempt: <key> (<reason>)` [D:micro-exempt]; the inventory
+# e2e allows an exempt key to have no `# rule:`. This file is the SPEC,
+# but a spec is honest about what its engine cannot say.
+
+# micro-exempt: binder (RE2 has no per-capture-group colours, so `let cli` cannot colour the name apart from the keyword)
+# micro-exempt: type-param (RE2 cannot peek for a closing quote to tell `'a` (type var) from `'echo x'` (command raw string); tree-sitter uses an external scanner, TextMate a lookahead)
+# micro-exempt: field-name (RE2 has no lookahead to require a following `:` or `=` without consuming it, nor lookbehind to catch a field after `{`/`;` — the first field on a `{ Field = ` line, or an inline `{ A = 1; B = 2 }`; and it colours a whole match one colour, so it cannot scope a record field name apart from the punctuation and the type/value after it)
+# micro-exempt: yaml-district (RE2 has no lookbehind to exclude the `to yaml` adapter at line end — the marker rule would actively mis-color `x |> to yaml` — and regions cannot close on a dedent, so the block cannot be scoped either; district body lines render with the base rules)
+# micro-exempt: heredoc-district-interp (RE2 regions cannot close on a dedent, so a $<<< body cannot be scoped and its {holes} cannot color; the marker glyph itself IS expressible — the heredoc-district rule covers both spellings)
+
+filetype: weir
+
+detect:
+    filename: "\\.weir$"
+    header: "^#!.*\\bweir\\b"
+
+rules:
+    # ---- shebang + directives (#sig is the only directive) ----
+    # rule: shebang
+    - preproc: "^#!.*$"
+    # rule: directive
+    - preproc: "^#sig\\b"
+
+    # ---- keywords (the parser's set, verified) ----
+    # rule: keywords
+    - statement: "\\b(let|in|if|then|elif|else|when|match|with|function|fun|type|of)\\b"
+    - statement: "\\b(from|to|for|do|module|import|within|always|retry|poll|until|pure|readonly|plan|while|return|try|def)\\b"
+    # the within KIND is part of the form, not a name [D:within-kinds] —
+    # micro paints the whole match, so within + kind share the statement
+    # color (the richer engines give the kind its own capture)
+    # rule: within-kind
+    - statement: "\\bwithin[ \\t]+(tmp|cd|env|proc|serve|lock)\\b"
+    # the from/to ADAPTER word is form, not a name [D:form-word-hover] —
+    # same whole-match paint (the richer engines scope the adapter apart)
+    # the optional `stream` modifier rides the match
+    # rule: adapter-word
+    - statement: "\\b(from|to)[ \\t]+(jsonl|json|yaml|xml|table)([ \\t]+stream)?\\b"
+    # reserved (rejected by the parser, but color them so muscle-memory
+    # F# reads as "claimed", not "identifier")
+    # rule: reserved
+    - statement: "\\b(rec|mutable|function)\\b"
+    # rule: bool
+    - constant.bool: "\\b(true|false)\\b"
+    # rule: not
+    - statement: "\\bnot\\b"
+
+    # ---- types / constructors / modules (the casing law:
+    # uppercase declares — one rule covers all three) ----
+    # rule: types
+    - type: "\\b[A-Z][A-Za-z0-9_]*\\b"
+    # field/annotation types: the lowercase ident after ':' is a type
+    # rule: field-type
+    - type: ":[ \\t]*[a-z_][A-Za-z0-9_]*"
+    # the four lowercase builtin types (int/string/bool/unit) — the casing
+    # law makes every OTHER type uppercase, so this closed set is the whole
+    # lowercase-type universe; catches them in EVERY position (of/-> /generic
+    # args) where the `:`-anchored field-type rule cannot reach
+    # rule: builtin-types
+    - type: "\\b(int|string|bool|unit)\\b"
+
+    # ---- numbers (int only; ranges lex as int .. int) ----
+    # rule: numbers
+    - constant.number: "\\b[0-9]+\\b"
+
+    # ---- command-mode sigils (plain and env-parameterized) ----
+    # rule: sigil-open
+    - special: "\\$\\("
+    - special: "!\\("
+    - special: "[$!][a-z_][A-Za-z0-9_]*\\("
+    # PATH-force prefix
+    # rule: force-prefix
+    - special: "\\^[A-Za-z][A-Za-z0-9_.-]*"
+
+    # ---- splices in command lines (casing law: vars are lowercase) ----
+    # rule: splice
+    - identifier.var: "\\$[a-z_][A-Za-z0-9_]*"
+
+    # ---- heredoc markers [D:text-block]: line-end `<<<` / `$<<<`. A
+    # glyph, so no identifier rule fights it and RE2 expresses it; the
+    # body still cannot be scoped (regions cannot close on a dedent)
+    # and renders with the base rules. AFTER the operator rules so this
+    # overwrite wins. ----
+    # rule: heredoc-district
+    - statement: "(^|[ \\t])\\$?<<<[ \\t]*$"
+
+    # ---- attributes on record fields (names get the types rule) ----
+    # rule: attribute
+    - special: "\\[<|>\\]"
+
+    # ---- anonymous record braces [D:anon-records]: one token each, so
+    # the interior pipe never paints as an operator ----
+    # rule: anon-record
+    - symbol.brackets: "\\{\\||\\|\\}"
+
+    # ---- operators ----
+    # rule: operators
+    - symbol.operator: "\\|>"
+    - symbol.operator: "(==|<>|<=|>=|->|\\.\\.|&&|\\|\\||::)"
+    - symbol.operator: "[+\\-*/%<>=;,]"
+    - symbol.operator: "\\|"
+
+    # ---- module members & field access (ident after '.'; any case —
+    # PascalCase fields like `ctx.Repo` are members, not types) ----
+    # rule: member
+    - identifier.var: "\\.[A-Za-z_][A-Za-z0-9_]*"
+
+    # ---- field-access shorthand ----
+    # rule: field-sugar
+    - special: "_\\.[A-Za-z][A-Za-z0-9_]*"
+    - special: "_\\["
+
+    # ---- raw interpolated: escapes OFF, holes ON; BEFORE interp-string
+    # so the $""" opener wins the $" tie ----
+    # rule: raw-interp
+    - constant.string:
+        start: "\\$\"\"\""
+        end: "\"\"\""
+        rules:
+            - special:
+                start: "\\{"
+                end: "\\}"
+                rules:
+                    - statement: "\\b(if|then|elif|else|when|match|with|function|fun|let|in)\\b"
+                    - constant.bool: "\\b(true|false)\\b"
+                    - type: "\\b[A-Z][A-Za-z0-9_]*\\b"
+                    - type: "\\b(int|string|bool|unit)\\b"
+                    - constant.number: "\\b[0-9]+\\b"
+                    - special: "_\\.[A-Za-z][A-Za-z0-9_]*"
+                    - symbol.operator: "\\|>"
+                    - symbol.operator: "(==|<>|<=|>=|->|\\.\\.)"
+                    - symbol.operator: "[+\\-*/%<>=]"
+                    - identifier: "\\b[a-z_][A-Za-z0-9_]*\\b"
+
+    # ---- interpolated strings, holes get real weir highlighting ----
+    # rule: interp-string
+    - constant.string:
+        start: "\\$\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\."
+            # escaped braces MUST precede the hole region so {{ / }}
+            # never open one
+            - constant.specialChar: "\\{\\{|\\}\\}"
+            - special:
+                start: "\\{"
+                end: "\\}"
+                rules:
+                    - statement: "\\b(if|then|elif|else|when|match|with|function|fun|let|in)\\b"
+                    - constant.bool: "\\b(true|false)\\b"
+                    - type: "\\b[A-Z][A-Za-z0-9_]*\\b"
+                    - type: "\\b(int|string|bool|unit)\\b"
+                    - constant.number: "\\b[0-9]+\\b"
+                    - special: "_\\.[A-Za-z][A-Za-z0-9_]*"
+                    - symbol.operator: "\\|>"
+                    - symbol.operator: "(==|<>|<=|>=|->|\\.\\.)"
+                    - symbol.operator: "[+\\-*/%<>=]"
+                    - identifier: "\\b[a-z_][A-Za-z0-9_]*\\b"
+
+    # ---- raw strings: @ verbatim ("" = one quote, no escapes) and
+    # triple-quoted (no escapes at all). Defined BEFORE plain strings
+    # so the openers win the tie; no escape rules inside — that is
+    # the point of the kinds. ----
+    # rule: raw-triple
+    - constant.string:
+        start: "\"\"\""
+        end: "\"\"\""
+        rules: []
+    # rule: raw-verbatim
+    - constant.string:
+        start: "@\""
+        end: "\""
+        skip: "\"\""
+        rules:
+            - constant.specialChar: "\"\""
+
+    # ---- plain strings ----
+    # rule: plain-string
+    - constant.string:
+        start: "\""
+        end: "\""
+        skip: "\\\\."
+        rules:
+            - constant.specialChar: "\\\\."
+
+    # ---- single-quoted strings (COMMAND-MODE; scanner-pinned:
+    # `echo 'a // b'` keeps its comment marker inside the quotes).
+    # The opener requires a preceding space/line-start so apostrophes
+    # in comments (GUIDE's, don't) never open a region; the cost is
+    # that a mid-word ' never opens one either, which matches command
+    # arg tokenization anyway. ----
+    # rule: command-single-quote
+    - constant.string:
+        start: "(^|[ \t])'"
+        end: "'"
+        rules: []
+
+    # ---- doc comments (///): a distinct region BEFORE the plain
+    # comment so the third slash wins the tie (region openers are tried
+    # in order); the `comment.doc` group lets a theme brighten docs,
+    # falling back to `comment` when it does not. RE2 needs no lookahead
+    # here — three literal slashes — so this is NOT micro-exempt. ----
+    # rule: doc-comment
+    - comment.doc:
+        start: "(^|[ \t])///"
+        end: "$"
+        rules: []
+
+    # ---- comments (weir rule: // at line start or after whitespace;
+    # bareword URLs in command lines stay uncolored). A REGION, and
+    # deliberately LAST: pattern rules overwrite earlier pattern
+    # matches, so a comment PATTERN gets its numbers/operators/types
+    # recolored by the rules after it — a region with no inner rules
+    # stays one color. Region openers win by line position, so a `//`
+    # inside a string never starts one. ----
+    # rule: comment
+    - comment:
+        start: "(^|[ \t])//"
+        end: "$"
+        rules: []
