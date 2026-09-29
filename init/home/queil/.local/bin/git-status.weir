@@ -1,0 +1,18 @@
+#!/usr/bin/env weir
+
+let w = Term.width () - 3
+let diff = git diff --color $"--stat={w}" HEAD |> Seq.freeze
+
+let byFile =
+    diff[..Seq.length diff - 2]
+    |> Seq.map Str.trimStart
+    |> Seq.map (fun l -> Str.fields l |> Seq.head, l)
+    |> Map.ofPairs
+
+let augment line =
+    Str.fields line
+    |> Seq.tryItem 1
+    |> Option.bind (fun n -> Map.tryGet n byFile |> Option.map (fun s -> Str.replace n s line))
+    |> Option.defaultValue line
+
+git -c color.status=always status -sb |> Seq.iter (augment >> print)
