@@ -25,7 +25,7 @@ ENV ZELLIJ_VER=0.45.0
 RUN curl -sSL "https://github.com/zellij-org/zellij/releases/download/v${ZELLIJ_VER}/zellij-no-web-aarch64-unknown-linux-musl.tar.gz" -o /tmp/zellij.tar.gz && \
     tar -zxvf /tmp/zellij.tar.gz -C /tmp && mkdir -p ~/.local/bin && mv /tmp/zellij ~/.local/bin/ && chmod +x ~/.local/bin/zellij && rm /tmp/zellij.tar.gz
 
-ARG CLAUDE_VER=2.1.241
+ARG CLAUDE_VER=2.1.277
 RUN curl -fsSL https://claude.ai/install.sh | bash -s "$CLAUDE_VER"
 
 # bun for plugins
