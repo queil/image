@@ -1,1 +1,74 @@
+#init
 
+#alias st = git-status.weir
+#alias ga = git add
+#alias di = git diff
+#alias co = git checkout
+#alias cb = git checkout -b
+#alias pl = git pull
+#alias inf = git add . | and git commit -a --amend --no-edit
+
+let branch () = git rev-parse --symbolic-full-name --abbrev-ref HEAD | line
+
+let pu () =
+    let b = branch ()
+    git push -u origin $b
+
+let cm msg = git commit -m $@msg
+
+let wipe () = git reset --hard | and git clean -xfd
+
+let prompt status =
+
+    let repo = git rev-parse --is-inside-work-tree | complete
+
+    let gitBit =
+        if repo.exitCode == 0 then
+            let b = git rev-parse --abbrev-ref HEAD | complete
+            let branch = b.stdout |> Seq.tryHead |> Option.defaultValue "?"
+
+            let u = git rev-parse --abbrev-ref "@{u}" | complete
+            let upstream = u.stdout |> Seq.tryHead |> Option.defaultValue ""
+
+            let ref =
+                if u.exitCode <> 0 || upstream == $"origin/{branch}" then
+                    branch
+                else
+                    $"{branch}:{upstream}"
+
+            let lines = git status --porcelain |> Seq.freeze
+            let staged = lines |> Seq.exists (Str.isMatch @"^[^ ?]")
+            let dirty = lines |> Seq.exists (Str.isMatch @"^.[^ ]")
+            let stashed = git stash list |> Seq.isEmpty |> not
+            let hasMark = dirty || staged || stashed
+
+            let marks = $<<<
+                { if hasMark then Color.red "[" else "" }
+                { if dirty then Color.red "!" else "" }
+                { if staged then Color.green "+" else "" }
+                { if stashed then Color.yellow "$" else "" }
+                { if hasMark then Color.red "] " else "" }
+
+            $"{Color.magenta ""} {Color.magenta ref} {marks |> Str.join ""}"
+        else
+            ""
+    let tint = if status.ok then Color.green else Color.magenta
+    let cwd = pwd |> Seq.exactlyOne |> Color.dim
+    let w = "≋ "
+    let container =
+        Env.get "ROOZ_META_WORKSPACE"
+        |> Option.map (fun c -> $"⬢ {c} ")
+        |> Option.defaultValue ""
+        |> Color.dim
+    print $"{w}{cwd} {gitBit}{container}"
+    $"{tint "❯"} "
+
+#session {
+    env = [
+        "CONTAINER_NAME", $(cat /etc/hostname | line)
+        "COLORTERM", "truecolor"
+        "MICRO_TRUECOLOR", "1"
+        "EDITOR", "micro"
+    ]
+    prompt = prompt
+}
