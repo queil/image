@@ -53,7 +53,7 @@ let prompt status =
         else
             ""
     let tint = if status.ok then Color.green else Color.magenta
-    let cwd = pwd |> Seq.exactlyOne |> Color.dim
+    let cwd = pwd |> Color.dim
     let w = "≋ "
     let container =
         Env.get "ROOZ_META_WORKSPACE"
