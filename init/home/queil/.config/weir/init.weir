@@ -18,6 +18,212 @@ let cm msg = git commit -m $@msg
 
 let wipe () = git reset --hard | and git clean -xfd
 
+// kubeconfig: only what the prompt shows; other keys are ignored
+type KubeCtx = { name: string; context: {| namespace: Option<string> |} }
+
+type KubeConfig = {
+    [<Wire "current-context">]
+    current: Option<string>
+    contexts: Option<seq<KubeCtx>>
+}
+
+// ☸ context (namespace), read from the kubeconfig files — no kubectl
+// spawn on every prompt. KUBECONFIG may list several files; as in
+// kubectl, the first current-context wins and contexts merge.
+let kubeBit () =
+    let files =
+        match Env.get "KUBECONFIG" with
+        | Some paths -> paths |> Str.split ":" |> Seq.where (fun p -> p <> "")
+        | None -> [ $"{Path.home ()}/.kube/config" ]
+
+    let configs =
+        files
+        |> Seq.where File.exists
+        |> Seq.map (File.read >> from yaml KubeConfig)
+        |> Seq.freeze
+
+    match configs |> Seq.tryPick _.current with
+    | None -> ""
+    | Some ctx ->
+        let ns =
+            configs
+            |> Seq.collect (fun c -> c.contexts |> Option.defaultValue [])
+            |> Seq.tryFind (fun c -> c.name == ctx)
+            |> Option.bind _.context.namespace
+            |> Option.defaultValue "default"
+
+        Color.green $"☸ {ctx} ({ns})" + " "
+
+// ☁ subscription (resource group), read from az's own files — `az` is a
+// Python start-up per prompt. The group is `az config set defaults.group`.
+let azureBit () =
+    let dir = Env.get "AZURE_CONFIG_DIR" |> Option.defaultValue $"{Path.home ()}/.azure"
+    let profile = $"{dir}/azureProfile.json"
+
+    if File.exists profile then
+        let p = File.read profile |> from json {| subscriptions: seq<{| name: string; isDefault: bool |}> |}
+
+        match p.subscriptions |> Seq.tryFind _.isDefault with
+        | None -> ""
+        | Some sub ->
+            let cfg = $"{dir}/config"
+
+            let group =
+                if File.exists cfg then
+                    File.read cfg |> Seq.tryPick (Str.rmatch @"^\s*group\s*=\s*(\S+)") |> Option.map Seq.head
+                else
+                    None
+
+            let label = Color.blue $"☁ {sub.name}"
+            let rg = group |> Option.map (fun g -> " " + Color.sgr "94" $"({g})") |> Option.defaultValue ""
+            label + rg + " "
+    else
+        ""
+
+// ---- project badge (inlined: the REPL does not load imports in init yet)
+// The prompt's project projectBadge: the nearest project above the working
+// directory, its kind as an icon and its version. Reads the manifest files
+// only; it never starts a tool, so it stays cheap on every prompt.
+// Icons are Nerd Font glyphs.
+
+// .NET project files: the properties the projectBadge shows
+type PropertyGroup = {
+    TargetFramework: Option<string>
+    TargetFrameworks: Option<string>
+    Version: Option<string>
+}
+
+type MsBuildProject = {
+    [<Elem "PropertyGroup">]
+    groups: seq<PropertyGroup>
+}
+
+type MavenProject = { version: Option<string> }
+
+// A string value from a TOML table, by a line scan: enough for the flat
+// `version = "…"` lines Cargo.toml and pyproject.toml use. weir has no
+// TOML reader, so inline tables and multi-line values are out of reach.
+let projTomlString table key lines =
+    let keyPattern = $"^\\s*{key}\\s*=\\s*\"([^\"]*)\""
+
+    lines
+    |> Seq.scan
+        (fun (section, _) line ->
+            match Str.rmatch @"^\s*\[([^\[\]]+)\]\s*(#.*)?$" line with
+            | Some groups -> (Seq.head groups |> Str.trim, "")
+            | None -> (section, line))
+        ("", "")
+    |> Seq.tryPick (fun (section, line) ->
+        if section == table then
+            Str.rmatch keyPattern line |> Option.map Seq.head
+        else
+            None)
+
+let projFirstMatch pattern lines =
+    lines |> Seq.tryPick (Str.rmatch pattern) |> Option.map Seq.head
+
+let projPaint code text = Color.sgr code text
+
+let projBadgeText icon parts =
+    parts |> Seq.choose (fun p -> p) |> Seq.append [ icon ] |> Str.join " "
+
+let projRust dir =
+    let lines = File.read $"{dir}/Cargo.toml" |> Seq.freeze
+
+    let version =
+        projTomlString "package" "version" lines
+        |> Option.orElse (projTomlString "workspace.package" "version" lines)
+
+    projPaint "38;5;208" (projBadgeText "" [ version ])
+
+let projDotnet dir =
+    let projects = Seq.append (Path.glob $"{dir}/*.fsproj") (Path.glob $"{dir}/*.csproj")
+
+    let groups =
+        projects
+        |> Seq.collect (fun p -> (File.read p |> from xml MsBuildProject).groups)
+        |> Seq.freeze
+
+    let pick f = groups |> Seq.tryPick f
+    let framework = pick _.TargetFramework |> Option.orElse (pick _.TargetFrameworks)
+    projPaint "38;5;135" (projBadgeText "" [ pick _.Version; framework ])
+
+let projNode dir =
+    let pkg = File.read $"{dir}/package.json" |> from json {| version: Option<string> |}
+    projPaint "32" (projBadgeText "" [ pkg.version ])
+
+let projPython dir =
+    let lines = File.read $"{dir}/pyproject.toml" |> Seq.freeze
+
+    let version =
+        projTomlString "project" "version" lines
+        |> Option.orElse (projTomlString "tool.poetry" "version" lines)
+
+    projPaint "33" (projBadgeText "" [ version ])
+
+let projGo dir =
+    let toolchain = File.read $"{dir}/go.mod" |> projFirstMatch @"^go\s+(\S+)"
+    projPaint "36" (projBadgeText "" [ toolchain ])
+
+let projMaven dir =
+    let pom = File.read $"{dir}/pom.xml" |> from xml MavenProject
+    projPaint "31" (projBadgeText "" [ pom.version ])
+
+let projHelm dir =
+    let chart = File.read $"{dir}/Chart.yaml" |> from yaml {| version: Option<string> |}
+    projPaint "34" (projBadgeText "⎈" [ chart.version ])
+
+let projDart dir =
+    let spec = File.read $"{dir}/pubspec.yaml" |> from yaml {| version: Option<string> |}
+    projPaint "36" (projBadgeText "" [ spec.version ])
+
+let projElixir dir =
+    let version = File.read $"{dir}/mix.exs" |> projFirstMatch @"version:\s*""([^""]+)"""
+    projPaint "35" (projBadgeText "" [ version ])
+
+let projPhp dir =
+    let composer = File.read $"{dir}/composer.json" |> from json {| version: Option<string> |}
+    projPaint "35" (projBadgeText "" [ composer.version ])
+
+let projRuby _ = projPaint "31" ""
+
+// first marker wins within a directory; a directory with none defers to
+// its parent
+let projKinds = [
+    (fun d -> File.exists $"{d}/Cargo.toml"), projRust
+    (fun d -> not (Seq.isEmpty (Path.glob $"{d}/*.fsproj")) || not (Seq.isEmpty (Path.glob $"{d}/*.csproj"))), projDotnet
+    (fun d -> File.exists $"{d}/package.json"), projNode
+    (fun d -> File.exists $"{d}/pyproject.toml"), projPython
+    (fun d -> File.exists $"{d}/go.mod"), projGo
+    (fun d -> File.exists $"{d}/pom.xml"), projMaven
+    (fun d -> File.exists $"{d}/Chart.yaml"), projHelm
+    (fun d -> File.exists $"{d}/pubspec.yaml"), projDart
+    (fun d -> File.exists $"{d}/mix.exs"), projElixir
+    (fun d -> File.exists $"{d}/composer.json"), projPhp
+    (fun d -> File.exists $"{d}/Gemfile"), projRuby
+]
+
+// `dir` and every directory above it, nearest first: the walk whose only
+// edge is a directory's parent (`Path.dir "/"` is "", the end)
+let projAncestors dir =
+    Graph.reach (fun d -> d) (fun d -> if Path.dir d == "" then [] else [ Path.dir d ]) dir
+
+/// the projectBadge for the nearest project at or above `dir`, followed by a
+/// space; "" outside any project
+let projectBadge dir =
+    // under $HOME the walk stops below it — a stray package.json in ~ would
+    // otherwise projectBadge every directory
+    let home = Path.home ()
+    let underHome = dir |> Str.startsWith $"{home}/"
+
+    projAncestors dir
+    |> Seq.takeWhile (fun d -> not underHome || d <> home)
+    |> Seq.tryPick (fun d ->
+        projKinds
+        |> Seq.tryFind (fun (found, _) -> found d)
+        |> Option.map (fun (_, render) -> render d + " "))
+    |> Option.defaultValue ""
+
 let prompt status =
 
     let repo = git rev-parse --is-inside-work-tree | complete
@@ -49,7 +255,7 @@ let prompt status =
                 { if stashed then Color.yellow "$" else "" }
                 { if hasMark then Color.red "] " else "" }
 
-            $"{Color.magenta ""} {Color.magenta ref} {marks |> Str.join ""}"
+            $"{Color.magenta ""} {Color.magenta ref} {marks |> Str.join ""}"
         else
             ""
     let tint = if status.ok then Color.green else Color.magenta
@@ -60,7 +266,7 @@ let prompt status =
         |> Option.map (fun c -> $"⬢ {c} ")
         |> Option.defaultValue ""
         |> Color.dim
-    print $"{w}{cwd} {gitBit}{container}"
+    print $"{kubeBit ()}{w}{cwd} {gitBit}{projectBadge pwd}{azureBit ()}{container}"
     $"{tint "❯"} "
 
 #session {
