@@ -44,5 +44,5 @@ themes {
 
 theme "spacedust"
 mouse_mode false
-default_shell "bash"
+default_shell "weir"
 pane_frames true
