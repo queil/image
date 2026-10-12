@@ -23,9 +23,6 @@ RUN dotnet tool install --global fsy --version 0.27.2 && \
     dotnet tool install -g fsautocomplete && \
     dotnet tool install -g fantomas && fsy install-fsx-extensions
 
-RUN mkdir -p ~/.config/micro/plug/lsp && \
-    git clone -b fsharp https://github.com/queil/micro-plugin-lsp.git ~/.config/micro/plug/lsp
-
 ARG KUSTOMIZE_VER=5.8.1
 ARG KUBESEAL_VER=0.36.6
 ARG ARGO_WF_VER=4.0.5
