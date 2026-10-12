@@ -1,0 +1,154 @@
+module Project
+
+// The prompt's project badge: the nearest project above the working
+// directory, its kind as an icon and its version. Reads the manifest files
+// only; it never starts a tool, so it stays cheap on every prompt.
+// Icons are Nerd Font glyphs.
+
+/// .NET project files: the properties the badge shows
+type PropertyGroup = {
+    TargetFramework: Option<string>
+    TargetFrameworks: Option<string>
+    Version: Option<string>
+}
+
+type MsBuildProject = {
+    [<Elem "PropertyGroup">]
+    groups: seq<PropertyGroup>
+}
+
+type MavenProject = { version: Option<string> }
+
+let firstMatch pattern lines =
+    lines |> Seq.tryPick (Str.rmatch pattern) |> Option.map Seq.head
+
+let paint code text = Color.sgr code text
+
+let badgeText icon parts =
+    parts |> Seq.choose (fun p -> p) |> Seq.append [ icon ] |> Str.join " "
+
+// `dir` and every directory above it, nearest first: the walk whose only
+// edge is a directory's parent (`Path.dir "/"` is "", the end)
+let ancestors dir =
+    Graph.reach (fun d -> d) (fun d -> if Path.dir d == "" then [] else [ Path.dir d ]) dir
+
+// a Cargo version is a string, or `version.workspace = true` in a workspace
+// member — then the nearest workspace root above names it. Read opaquely, so
+// the table case never fails the read
+type CargoToml = {
+    package: Option<{| version: Option<Yaml> |}>
+    workspace: Option<{| package: Option<{| version: Option<string> |}> |}>
+}
+
+let readCargo dir = File.read $"{dir}/Cargo.toml" |> from toml CargoToml
+
+let workspaceVersion c =
+    c.workspace |> Option.bind _.package |> Option.bind _.version
+
+let rust dir =
+    let cargo = readCargo dir
+
+    let inherited () =
+        ancestors (Path.dir dir)
+        |> Seq.where (fun d -> d <> "" && File.exists $"{d}/Cargo.toml")
+        |> Seq.tryPick (fun d -> readCargo d |> workspaceVersion)
+
+    let version =
+        match cargo.package |> Option.bind _.version with
+        | Some(YStr v) -> Some v
+        | Some _ -> inherited ()
+        | None -> workspaceVersion cargo
+
+    paint "38;5;208" (badgeText "" [ version ])
+
+let dotnet dir =
+    let projects = Seq.append (Path.glob $"{dir}/*.fsproj") (Path.glob $"{dir}/*.csproj")
+
+    let groups =
+        projects
+        |> Seq.collect (fun p -> (File.read p |> from xml MsBuildProject).groups)
+        |> Seq.freeze
+
+    let pick f = groups |> Seq.tryPick f
+    let framework = pick _.TargetFramework |> Option.orElse (pick _.TargetFrameworks)
+    paint "38;5;135" (badgeText "" [ pick _.Version; framework ])
+
+let node dir =
+    let pkg = File.read $"{dir}/package.json" |> from json {| version: Option<string> |}
+    paint "32" (badgeText "" [ pkg.version ])
+
+let python dir =
+    let py =
+        File.read $"{dir}/pyproject.toml"
+        |> from toml {| project: Option<{| version: Option<string> |}>; tool: Option<{| poetry: Option<{| version: Option<string> |}> |}> |}
+
+    let version =
+        py.project
+        |> Option.bind _.version
+        |> Option.orElse (py.tool |> Option.bind _.poetry |> Option.bind _.version)
+
+    paint "33" (badgeText "" [ version ])
+
+let go dir =
+    let toolchain = File.read $"{dir}/go.mod" |> firstMatch @"^go\s+(\S+)"
+    paint "36" (badgeText "" [ toolchain ])
+
+let maven dir =
+    let pom = File.read $"{dir}/pom.xml" |> from xml MavenProject
+    paint "31" (badgeText "" [ pom.version ])
+
+let isEmpty x = x == ""
+
+let _x = isEmpty >> not
+
+let helm dir =
+    let chart = File.read $"{dir}/Chart.yaml" |> from yaml {| version: Option<string> |}
+    paint "34" (badgeText "⎈" [ chart.version ])
+
+let dart dir =
+    let spec = File.read $"{dir}/pubspec.yaml" |> from yaml {| version: Option<string> |}
+    paint "36" (badgeText "" [ spec.version ])
+
+let elixir dir =
+    let version = File.read $"{dir}/mix.exs" |> firstMatch @"version:\s*""([^""]+)"""
+    paint "35" (badgeText "" [ version ])
+
+let php dir =
+    let composer = File.read $"{dir}/composer.json" |> from json {| version: Option<string> |}
+    paint "35" (badgeText "" [ composer.version ])
+
+let ruby _ = paint "31" ""
+
+// first marker wins within a directory; a directory with none defers to
+// its parent
+let kinds = [
+    (fun d -> File.exists $"{d}/Cargo.toml"), rust
+    (fun d -> not (Seq.isEmpty (Path.glob $"{d}/*.fsproj")) || not (Seq.isEmpty (Path.glob $"{d}/*.csproj"))), dotnet
+    (fun d -> File.exists $"{d}/package.json"), node
+    (fun d -> File.exists $"{d}/pyproject.toml"), python
+    (fun d -> File.exists $"{d}/go.mod"), go
+    (fun d -> File.exists $"{d}/pom.xml"), maven
+    (fun d -> File.exists $"{d}/Chart.yaml"), helm
+    (fun d -> File.exists $"{d}/pubspec.yaml"), dart
+    (fun d -> File.exists $"{d}/mix.exs"), elixir
+    (fun d -> File.exists $"{d}/composer.json"), php
+    (fun d -> File.exists $"{d}/Gemfile"), ruby
+]
+
+/// the badge for the nearest project at or above `dir`, followed by a
+/// space; "" outside any project
+let badge : string -> string
+
+let badge dir =
+    // under $HOME the walk stops below it — a stray package.json in ~ would
+    // otherwise badge every directory
+    let home = Path.home ()
+    let underHome = dir |> Str.startsWith $"{home}/"
+
+    ancestors dir
+    |> Seq.takeWhile (fun d -> not underHome || d <> home)
+    |> Seq.tryPick (fun d ->
+        kinds
+        |> Seq.tryFind (fun (found, _) -> found d)
+        |> Option.map (fun (_, render) -> render d + " "))
+    |> Option.defaultValue ""
