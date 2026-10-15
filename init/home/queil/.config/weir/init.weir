@@ -18,7 +18,9 @@ let pu () =
     let b = branch ()
     git push -u origin $b
 
-let cm msg = git commit -m $msg
+let cm msg = git commit -m $@msg
+
+let gl = git log --oneline -n 10
 
 let wipe () = git reset --hard | and git clean -xfd
 
@@ -140,7 +142,7 @@ let prompt status =
 
 #session {
     env = [
-        "CONTAINER_NAME", $(cat /etc/hostname | line)
+        "CONTAINER_NAME", File.read "/etc/hostname" |> Seq.freeze |> Seq.exactlyOne
         "COLORTERM", "truecolor"
         "MICRO_TRUECOLOR", "1"
         "EDITOR", "micro"
