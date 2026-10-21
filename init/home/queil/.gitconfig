@@ -21,3 +21,16 @@
 
 [diff]
     colorMoved = default
+
+[pull]
+    rebase = false
+[rebase]
+    autoStash = true
+[merge]
+    autoStash = true
+[branch]
+    autoSetupRebase = always
+[branch "main"]
+    rebase = false
+[branch "development"]
+    rebase = false
