@@ -10,15 +10,13 @@ import "./project.weir"
 #alias co = git checkout
 #alias cb = git checkout -b
 #alias pl = git pull
-#alias inf = git add . | and git commit -a --amend --no-edit
+#alias pu = git push -u origin
+
+let inf () = git add . | and git commit -a --amend --no-edit
 
 let branch () = git rev-parse --symbolic-full-name --abbrev-ref HEAD | line
 
-let pu () =
-    let b = branch ()
-    git push -u origin $b
-
-let cm msg = git commit -m $@msg
+let cm msg = git commit -m $msg
 
 let gl = git log --oneline -n 10
 
