@@ -64,5 +64,3 @@ RUN "./.upd/init/home/$USER/update.sh"
 ENV XDG_RUNTIME_DIR="/tmp"
 
 WORKDIR $HOME
-
-CMD ["/usr/sbin/sshd", "-D", "-p", "2222", "-E", "/dev/stderr"]
