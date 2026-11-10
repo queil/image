@@ -6,7 +6,7 @@ ARG HOME=/home/$USER
 RUN microdnf update -y && \
     microdnf install -y --nodocs --setopt install_weak_deps=0 \
     man mmv systemd tar unzip bash-completion git git-delta jq dnsutils tree gh \
-    iproute htop which procps-ng tree fzf openssh-clients \
+    iproute htop which procps-ng tree fzf openssh-clients && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     adduser $USER && chown $USER -R $HOME
 
